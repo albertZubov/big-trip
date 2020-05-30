@@ -1,4 +1,4 @@
-export const createDay = (numberDay, dateAttr, dateContent, event) => `
+export const createDay = (numberDay, dateAttr, dateContent, ...eventWrap) => `
 <li class="trip-days__item  day">
   <div class="day__info">
     <span class="day__counter">${numberDay}</span>
@@ -6,9 +6,7 @@ export const createDay = (numberDay, dateAttr, dateContent, event) => `
   </div>
 
   <ul class="trip-events__list">
-    <li class="trip-events__item">
-    ${event}
-    </li>
+    ${eventWrap.join(``)}
   </ul>
 </li>
 `;

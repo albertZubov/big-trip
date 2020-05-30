@@ -6,6 +6,7 @@ import { createMenuInfo } from "./components/menu-info";
 import { createMenu } from "./components/menu";
 import { createSort } from "./components/sort";
 import { createTripDay } from "./components/trip-days";
+import { createEventWrap } from "./components/event-wrap";
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripMenu = tripMain.querySelector(`.trip-controls`);
@@ -42,111 +43,60 @@ render(
       `1`,
       `2019-03-19`,
       `MAR 19`,
-      createEvent(
-        `taxi`,
-        `Flight to Geneva`,
-        `2019-03-19T14:20`,
-        `14:20`,
-        `2019-03-19T13:00`,
-        `13:00`,
-        `1H 20M`,
-        50,
-        `Book tickets`,
-        40
-      )
+      createEventWrap(
+        createEvent(
+          `taxi`,
+          `Flight to Geneva`,
+          `2019-03-19T14:20`,
+          `14:20`,
+          `2019-03-19T13:00`,
+          `13:00`,
+          `1H 20M`,
+          50,
+          `Book tickets`,
+          40
+        )
+      ),
+      createEventWrap(createEventEdit(`18/03/19 12:25`, `18/03/19 13:35`))
     ),
 
     createDay(
       `2`,
       `2019-03-19`,
       `MAR 19`,
-      createEvent(
-        `flight`,
-        `Check-in in Chamonix`,
-        `2019-03-18T16:20`,
-        `16:20`,
-        `2019-03-18T17:00`,
-        `17:00`,
-        `40M`,
-        600,
-        `Add breakfast`,
-        50
+      createEventWrap(
+        createEvent(
+          `flight`,
+          `Check-in in Chamonix`,
+          `2019-03-18T16:20`,
+          `16:20`,
+          `2019-03-18T17:00`,
+          `17:00`,
+          `40M`,
+          600,
+          `Add breakfast`,
+          50
+        )
       )
     ),
     createDay(
       `3`,
       `2019-03-19`,
       `MAR 19`,
-      createEvent(
-        `check-in`,
-        `Drive to Geneva`,
-        `2019-03-18T16:20`,
-        `16:20`,
-        `2019-03-18T17:00`,
-        `17:00`,
-        `40M`,
-        600,
-        `Add breakfast`,
-        50
+      createEventWrap(
+        createEvent(
+          `check-in`,
+          `Drive to Geneva`,
+          `2019-03-18T16:20`,
+          `16:20`,
+          `2019-03-18T17:00`,
+          `17:00`,
+          `40M`,
+          600,
+          `Add breakfast`,
+          50
+        )
       )
     ),
   ])
 );
-
-render();
-
-/* render(tripEvents, createTripDay(), `beforeEnd`);
-
-const tripDay = tripEvents.querySelector(`.trip-days`);
-render(tripDay, createDay(`1`, `2019-03-19`, `MAR 19`), `beforeEnd`);
-
-const event = tripDay.querySelector(`.trip-events__item`);
-render(
-  event,
-  createEvent(
-    `img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon"`,
-    `Sightseeing in Chamonix`,
-    `2019-03-19T14:20`,
-    `14:20`,
-    `2019-03-19T13:00`,
-    `13:00`,
-    `1H 20M`,
-    50,
-    `Book tickets`,
-    40
-  ),
-  `beforeEnd`
-);
-render(event, createEventEdit(`18/03/19 12:25`, `18/03/19 13:35`), `beforeEnd`);
-render(
-  event,
-  createEvent(
-    `img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon"`,
-    `Check-in in Chamonix`,
-    `2019-03-18T16:20`,
-    `16:20`,
-    `2019-03-18T17:00`,
-    `17:00`,
-    `40M`,
-    600,
-    `Add breakfast`,
-    50
-  ),
-  `beforeEnd`
-);
-render(
-  event,
-  createEvent(
-   `img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon"`,
-    `Check-in in Chamonix`,
-    `2019-03-18T16:20`,
-    `16:20`,
-    `2019-03-18T17:00`,
-    `17:00`,
-    `40M`,
-    600,
-    `Add breakfast`,
-    50
-  ),
-  `beforeEnd`
-); */
