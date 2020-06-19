@@ -1,12 +1,16 @@
-export const createDay = (numberDay, dateAttr, dateContent, ...eventWrap) => `
+export const createDay = ({ counter, isDate }, ...event) => {
+  return `
 <li class="trip-days__item  day">
   <div class="day__info">
-    <span class="day__counter">${numberDay}</span>
-    <time class="day__date" datetime="${dateAttr}">${dateContent}</time>
+    <span class="day__counter">${counter}</span>
+    <time class="day__date" datetime="${isDate.getDate()}-${isDate.getMonth()}-${isDate.getFullYear()}">${isDate
+    .toString()
+    .slice(4, 10)}</time>
   </div>
 
   <ul class="trip-events__list">
-    ${eventWrap.join(``)}
+    ${event.join(``)}
   </ul>
 </li>
 `;
+};
