@@ -5,11 +5,6 @@ const getRandomNumber = (number) => getCountRandom(1, number);
 export const getCountRandom = (min, max) =>
   Math.floor(Math.random() * (max - min) + min);
 
-let currentCount = 1;
-const makeCounter = () => {
-  return currentCount++;
-};
-
 export const getEvent = () => ({
   typeEventTransfer: [
     `taxi`,
@@ -59,5 +54,12 @@ export const getEvent = () => ({
     { value: `seats`, title: `Choose seats`, price: `80`, checked: `checked` },
     { value: `train`, title: `Travel by train`, price: `60` },
   ],
-  counter: makeCounter(),
+});
+
+export const getMenuData = () => ({
+  title: [`Amsterdam`, `Chamonix`, `Geneva`, `Washington`, `London`].sort(
+    () => Math.random() - 0.5
+  ),
+  isDate: new Date(),
+  totalAmount: Math.round(getRandomNumber(5000) / 100) * 100,
 });
