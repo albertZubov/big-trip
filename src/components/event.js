@@ -6,6 +6,7 @@ export const createEvent = ({
   isDate,
   transitTime,
   eventOffer,
+  price,
 }) => {
   const randomTimeTransit = transitTime[getCountRandom(0, transitTime.length)];
   return `
@@ -31,9 +32,7 @@ export const createEvent = ({
     }H ${`00`}M</p>
   </div>
   <p class="event__price">
-    €&nbsp;<span class="event__price-value">${
-      Math.round(getCountRandom(40, 200) / 10) * 10
-    }</span>
+    €&nbsp;<span class="event__price-value">${price}</span>
   </p>
   <h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">

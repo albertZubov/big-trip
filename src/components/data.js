@@ -33,6 +33,7 @@ export const getEvent = () => ({
     `New York`,
   ],
   photos: `${Math.random()}`,
+  price: Math.round(getCountRandom(40, 200) / 10) * 10,
   description: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
     `Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.`,
@@ -61,5 +62,4 @@ export const getMenuData = () => ({
     () => Math.random() - 0.5
   ),
   isDate: new Date(),
-  totalAmount: Math.round(getRandomNumber(5000) / 100) * 100,
 });

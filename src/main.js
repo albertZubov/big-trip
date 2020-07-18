@@ -14,7 +14,7 @@ const tripMenu = tripMain.querySelector(`.trip-controls`);
 const tripMenuFirstTitle = tripMenu.querySelector(`.visually-hidden`);
 const tripEvents = document.querySelector(`.trip-events`);
 const EVENT_COUNT = 3;
-const DAY_COUNT = 1;
+const DAY_COUNT = 3;
 
 const render = (container, element, posititon = `beforeEnd`) => {
   const div = document.createElement(`div`);
@@ -25,37 +25,26 @@ const render = (container, element, posititon = `beforeEnd`) => {
   return node;
 };
 
-render(tripMain, createMenuInfo(getMenuData()), `afterBegin`);
+const eventsArr = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
+const daysArr = new Array(DAY_COUNT).fill(``).map(eventsArr);
+
+const getDayMarkup = (arr) =>
+  arr.map(createEvent).map(createEventWrap).join(``);
+
+const daysMarkup = daysArr.map((dayOfEvents, id) =>
+  createDay(id, getDayMarkup(dayOfEvents))
+);
+
+render(tripMain, createMenuInfo(daysArr, getMenuData()), `afterBegin`);
 
 render(tripMenuFirstTitle, createMenu(), `afterEnd`);
 render(tripMenu, createFilter());
 render(tripEvents, createSort());
 
-const getEventMarkup = () =>
-  new Array(EVENT_COUNT)
-    .fill(``)
-    .map(getEvent)
-    .map(createEvent)
-    .map(createEventWrap)
-    .join(``);
-
-const days = new Array(DAY_COUNT)
-  .fill(``)
-  .map((_, id) => createDay(id, getEvent(), getEventMarkup()));
-
-render(tripEvents, createTripDay(days));
+render(tripEvents, createTripDay(daysMarkup));
 const tripEventEdit = tripEvents.querySelector(`.trip-events__list`);
 render(
   tripEventEdit,
   createEventWrap(createEventEdit(getEvent())),
   `afterBegin`
 );
-
-const arrPrice = tripEvents.querySelectorAll(`.event__price-value`);
-const totalPrice = tripMain.querySelector(`.trip-info__cost-value`);
-let totalAmountPrice = Number();
-arrPrice.forEach((cb) => {
-  totalAmountPrice += +cb.textContent;
-});
-
-totalPrice.textContent = totalAmountPrice;
