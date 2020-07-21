@@ -19,16 +19,18 @@ export const createEvent = ({
   <h3 class="event__title">${title[getCountRandom(0, title.length)]}</h3>
   <div class="event__schedule">
     <p class="event__time">
-      <time class="event__start-time" datetime="${isDate.getFullYear()}-${isDate.getMonth()}-${isDate.getDate()}T${isDate.getHours()}:${isDate.getMinutes()}">${isDate.getHours()}:${isDate.getMinutes()}</time>
+      <time class="event__start-time" datetime="${isDate.year}-${
+    isDate.month
+  }-${isDate.dayPresent}T${isDate.timePresent}">${isDate.timePresent}</time>
       —
-      <time class="event__end-time" datetime="${isDate.getFullYear()}-${isDate.getMonth()}-${isDate.getDate()}T${
-    isDate.getHours() + randomTimeTransit
-  }:${isDate.getMinutes()}">${
-    isDate.getHours() + randomTimeTransit
-  }:${isDate.getMinutes()}</time>
+      <time class="event__end-time" datetime="${isDate.year}-${isDate.month}-${
+    isDate.dayPresent
+  }T${isDate.hours + randomTimeTransit}:${isDate.minutes}">${
+    isDate.hours + randomTimeTransit
+  }:${isDate.minutes}</time>
     </p>
     <p class="event__duration">${
-      isDate.getHours() + randomTimeTransit - isDate.getHours()
+      isDate.hours + randomTimeTransit - isDate.hours
     }H ${`00`}M</p>
   </div>
   <p class="event__price">

@@ -1,3 +1,5 @@
+import { getDate } from "./utils";
+
 const getRandomBoolean = () => Boolean(Math.round(Math.random()));
 
 const getRandomNumber = (number) => getCountRandom(1, number);
@@ -42,7 +44,7 @@ export const getEvent = () => ({
     `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.`,
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
   ].slice(0, getRandomNumber(4)),
-  isDate: new Date(),
+  isDate: getDate(Date.now()),
   eventOffer: [
     { value: `luggage`, title: `Add luggage`, price: `30` },
     {
@@ -61,5 +63,5 @@ export const getMenuData = () => ({
   title: [`Amsterdam`, `Chamonix`, `Geneva`, `Washington`, `London`].sort(
     () => Math.random() - 0.5
   ),
-  isDate: new Date(),
+  isDate: getDate(Date.now()),
 });

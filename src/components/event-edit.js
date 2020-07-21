@@ -74,18 +74,16 @@ export const createEventEdit = ({
      <label class="visually-hidden" for="event-start-time-1">
        From
      </label>
-     <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${isDate.getDate()}/${
-    isDate.getMonth() + 1
-  }/${isDate.getFullYear()} ${isDate.toString().split(` `)[4].slice(0, 5)}"> 
+     <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${
+       isDate.dayPresent
+     }/${isDate.monthNumber + 1}/${isDate.year} ${isDate.timePresent}"> 
      —
      <label class="visually-hidden" for="event-end-time-1">
        To
      </label>
      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${
-       isDate.getDate() + 1
-     }/${
-    isDate.getMonth() + 1
-  }/${isDate.getFullYear()} ${isDate.toString().split(` `)[4].slice(0, 5)}">
+       isDate.dayPresent + 1
+     }/${isDate.monthNumber + 1}/${isDate.year} ${isDate.timePresent}">
    </div>
 
    <div class="event__field-group  event__field-group--price">
