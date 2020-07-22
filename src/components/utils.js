@@ -8,8 +8,11 @@ export const getDate = (date) => {
     year: date.getFullYear(),
     hours: date.getHours(),
     minutes: date.getMinutes(),
+    timePresent: date.toLocaleTimeString("en-US", {
+      hour12: false,
+      hour: "numeric",
+      minute: "numeric",
+    }),
   };
-
-  dateObj.timePresent = dateObj.hours + `:` + dateObj.minutes;
   return dateObj;
 };
