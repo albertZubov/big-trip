@@ -14,7 +14,7 @@ const tripMenu = tripMain.querySelector(`.trip-controls`);
 const tripMenuFirstTitle = tripMenu.querySelector(`.visually-hidden`);
 const tripEvents = document.querySelector(`.trip-events`);
 const EVENT_COUNT = 3;
-const DAY_COUNT = 3;
+const DAY_COUNT = 3; 
 
 const render = (container, element, posititon = `beforeEnd`) => {
   const div = document.createElement(`div`);

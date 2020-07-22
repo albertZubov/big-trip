@@ -1,5 +1,4 @@
-export const getDate = (dateMilliseconds) => {
-  const date = new Date(dateMilliseconds);
+export const getDate = (date) => {
   const dateObjToArr = date.toDateString().split(` `);
   const dateObj = {
     dayOfWeek: dateObjToArr[0],
@@ -7,9 +6,10 @@ export const getDate = (dateMilliseconds) => {
     monthNumber: date.getMonth(),
     dayPresent: date.getDate(),
     year: date.getFullYear(),
-    timePresent: date.toTimeString().slice(0, 5),
     hours: date.getHours(),
     minutes: date.getMinutes(),
   };
+
+  dateObj.timePresent = dateObj.hours + `:` + dateObj.minutes;
   return dateObj;
 };

@@ -44,7 +44,7 @@ export const getEvent = () => ({
     `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.`,
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
   ].slice(0, getRandomNumber(4)),
-  isDate: getDate(Date.now()),
+  isDate: getDate(new Date()),
   eventOffer: [
     { value: `luggage`, title: `Add luggage`, price: `30` },
     {
@@ -63,5 +63,5 @@ export const getMenuData = () => ({
   title: [`Amsterdam`, `Chamonix`, `Geneva`, `Washington`, `London`].sort(
     () => Math.random() - 0.5
   ),
-  isDate: getDate(Date.now()),
+  isDate: getDate(new Date()),
 });
