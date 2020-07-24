@@ -16,3 +16,9 @@ export const getDate = (date) => {
   };
   return dateObj;
 };
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstElementChild;
+};
