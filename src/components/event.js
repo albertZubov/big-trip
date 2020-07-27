@@ -1,7 +1,7 @@
 import { getCountRandom } from "./data";
 import { createElement } from "./utils.js";
 
-export class CreateEvent {
+export class Event {
   constructor({
     typeEventTransfer,
     title,

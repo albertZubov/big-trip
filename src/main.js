@@ -1,6 +1,6 @@
 import { createDay } from "./components/day";
-import { CreateEventEdit } from "./components/event-edit";
-import { CreateEvent } from "./components/event";
+import { EventEdit } from "./components/event-edit";
+import { Event } from "./components/event";
 import { createFilter } from "./components/filter";
 import { createMenuInfo } from "./components/menu-info";
 import { createMenu } from "./components/menu";
@@ -30,30 +30,40 @@ const render = (container, element, posititon = `beforeEnd`) => {
   return node;
 };
 
-/* const renderEvent = (data) => {
-  const event = new CreateEvent(data);
-  // const eventEdit = new CreateEventEdit(data);
+const renderEvents = (data) => {
+  const event = new Event(data);
+  // const eventEdit = new EventEdit(data);
 
-  return createEventWrap(event.getElement().outerHTML);
-}; */
+  const setMarkup = createEventWrap(event.getElement().outerHTML);
+
+  event
+    .getElement()
+    .querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, () => {
+      console.log(`32131`);
+      // eventsList.replaceChild(eventEdit.getElement(), event.getElement());
+    });
+
+  return setMarkup;
+};
 
 const eventsArrData = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
 const daysArr = new Array(DAY_COUNT).fill(``).map(eventsArrData);
 
-const getDayMarkup = (dayOfEventsData) =>
+/* const getDayMarkup = (dayOfEventsData) =>
   dayOfEventsData
     .map((dataEvent) => new CreateEvent(dataEvent).getElement())
     .map((event) => createEventWrap(event.outerHTML))
-    .join(``);
+    .join(``); */
 
 const daysMarkup = daysArr.map((dayOfEventsData, id) => {
-  return createDay(id, getDayMarkup(dayOfEventsData));
+  // return createDay(id, getDayMarkup(dayOfEventsData));
 
-  /*   const arrEvent = [];
+  const arrEvent = [];
   dayOfEventsData.forEach((data) => {
-    arrEvent.push(renderEvent(data));
+    arrEvent.push(renderEvents(data));
   });
-  createDay(id, arrEvent); */
+  return createDay(id, arrEvent.join(``));
 });
 
 render(tripMain, createMenuInfo(daysArr, getMenuData()), `afterBegin`);

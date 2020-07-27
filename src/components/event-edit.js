@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import { createElement } from "./utils.js";
-export class CreateEventEdit {
+export class EventEdit {
   constructor({
     typeEventTransfer,
     typeEventActivity,
