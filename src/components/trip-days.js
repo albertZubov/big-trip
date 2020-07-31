@@ -1,5 +1,5 @@
-export const createTripDay = (days) => `
+export const createTripDay = () => `
 <ul class="trip-days">
-  ${days.join(``)}
+  <children />
 </ul>
 `;
