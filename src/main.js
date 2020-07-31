@@ -1,4 +1,4 @@
-import { createDay } from "./components/day";
+import { Day } from "./components/day";
 import { EventEdit } from "./components/event-edit";
 import { Event } from "./components/event";
 import { createFilter } from "./components/filter";
@@ -6,8 +6,9 @@ import { createMenuInfo } from "./components/menu-info";
 import { createMenu } from "./components/menu";
 import { createSort } from "./components/sort";
 import { createTripDay } from "./components/trip-days";
-import { createEventWrap } from "./components/event-wrap";
 import { getEvent, getMenuData } from "./components/data";
+import { render, renderWithChildren } from "./components/utils";
+import { createTripEvents } from "./components/trip-events";
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripMenu = tripMain.querySelector(`.trip-controls`);
@@ -16,64 +17,51 @@ const tripEvents = document.querySelector(`.trip-events`);
 const EVENT_COUNT = 3;
 const DAY_COUNT = 3;
 
-const render = (container, element, posititon = `beforeEnd`) => {
-  let node = element;
+const eventsArrData = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
+const daysArrData = new Array(DAY_COUNT).fill(``).map(eventsArrData);
 
-  if (typeof element === `string`) {
-    const div = document.createElement(`div`);
-    div.innerHTML = element;
-    node = div.firstElementChild;
-    container.insertAdjacentHTML(posititon, element);
-  } else {
-    container.insertAdjacentHTML(posititon, element);
-  }
-  return node;
-};
+const daysMarkup = document.createDocumentFragment();
+daysArrData.forEach((dayOfEventsData, id) => {
+  const arrEvents = document.createDocumentFragment();
+  dayOfEventsData.forEach((el) => {
+    const event = new Event(el).getElement();
+    const eventEdit = new EventEdit(el).getElement();
+    const eventsContainer = renderWithChildren(createTripEvents(), event);
 
-const renderEvents = (data) => {
-  const event = new Event(data);
-  // const eventEdit = new EventEdit(data);
+    const btnEvent = event.querySelector(".event__rollup-btn");
+    const btnEventEdit = eventEdit.querySelector(".event__rollup-btn");
 
-  const setMarkup = createEventWrap(event.getElement().outerHTML);
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.ket === `Esc`) {
+        eventsContainer.replaceChild(event, eventEdit);
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
 
-  event
-    .getElement()
-    .querySelector(`.event__rollup-btn`)
-    .addEventListener(`click`, () => {
-      console.log(`32131`);
-      // eventsList.replaceChild(eventEdit.getElement(), event.getElement());
+    btnEvent.addEventListener("click", () => {
+      eventsContainer.replaceChild(eventEdit, event);
+      document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-  return setMarkup;
-};
+    btnEventEdit.addEventListener(`click`, () => {
+      eventsContainer.replaceChild(event, eventEdit);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
 
-const eventsArrData = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
-const daysArr = new Array(DAY_COUNT).fill(``).map(eventsArrData);
-
-/* const getDayMarkup = (dayOfEventsData) =>
-  dayOfEventsData
-    .map((dataEvent) => new CreateEvent(dataEvent).getElement())
-    .map((event) => createEventWrap(event.outerHTML))
-    .join(``); */
-
-const daysMarkup = daysArr.map((dayOfEventsData, id) => {
-  // return createDay(id, getDayMarkup(dayOfEventsData));
-
-  const arrEvent = [];
-  dayOfEventsData.forEach((data) => {
-    arrEvent.push(renderEvents(data));
+    arrEvents.append(eventsContainer);
   });
-  return createDay(id, arrEvent.join(``));
+  const day = new Day(id, arrEvents).getElement();
+  daysMarkup.append(day);
 });
 
-render(tripMain, createMenuInfo(daysArr, getMenuData()), `afterBegin`);
+render(tripMain, createMenuInfo(daysArrData, getMenuData()), `afterBegin`);
 render(tripMenuFirstTitle, createMenu(), `afterEnd`);
 render(tripMenu, createFilter());
 render(tripEvents, createSort());
-render(tripEvents, createTripDay(daysMarkup));
 /* const tripEventEdit = tripEvents.querySelector(`.trip-events__list`);
 render(
   tripEventEdit,
   createEventWrap(createEventEdit(getEvent())),
   `afterBegin`
 ); */
+render(tripEvents, renderWithChildren(createTripDay(), daysMarkup));
