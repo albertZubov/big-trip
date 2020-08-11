@@ -1,28 +1,29 @@
 import { renderWithChildren } from "./utils.js";
+import { AbstractComponent } from "./abstract-component.js";
 
-export class Day {
+export class Day extends AbstractComponent {
   constructor(counter, children) {
-    this.counter = counter;
-    this.children = children;
-    this.element = null;
+    super();
+    this._counter = counter;
+    this._children = children;
   }
 
   getElement() {
-    if (!this.element) {
-      this.element = renderWithChildren(this.getTemplate(), this.children);
+    if (!this._element) {
+      this._element = renderWithChildren(this.getTemplate(), this._children);
     }
-    return this.element;
+    return this._element;
   }
 
   getTemplate() {
     const isDate = new Date();
     return `<li class="trip-days__item  day">
     <div class="day__info">
-      <span class="day__counter">${this.counter + 1}</span>
+      <span class="day__counter">${this._counter + 1}</span>
       <time class="day__date" datetime="${isDate.getDate()}-${isDate.getMonth()}-${isDate.getFullYear()}">${
       isDate.toString().split(` `)[1] +
       ` ` +
-      (+isDate.toString().split(` `)[2] + this.counter)
+      (+isDate.toString().split(` `)[2] + this._counter)
     }</time>
     </div>
     <ul class="trip-events__list">

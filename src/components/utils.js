@@ -35,8 +35,13 @@ export const createElement = (template) => {
 };
 
 export const renderWithChildren = (parent, children) => {
-  const domParent = createElement(parent);
+  let domParent = parent;
+
+  if (typeof parent === "string") {
+    domParent = createElement(parent);
+  }
   const childrenContainer = domParent.querySelector("children");
+
   if (childrenContainer) {
     childrenContainer.replaceWith(children);
   }
