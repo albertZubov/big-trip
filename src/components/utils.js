@@ -34,6 +34,9 @@ export const createElement = (template) => {
   return newElement.firstElementChild;
 };
 
+export const copyArr = (arr) =>
+  Array.from(arr, (value) => (Array.isArray(value) ? copyArr(value) : value));
+
 export const renderWithChildren = (parent, children) => {
   let domParent = parent;
 
