@@ -10,6 +10,7 @@ export class Event extends AbstractComponent {
     transitTime,
     eventOffer,
     price,
+    randomTimeTransit,
   }) {
     super();
     this._typeEventTransfer = typeEventTransfer;
@@ -18,12 +19,10 @@ export class Event extends AbstractComponent {
     this._transitTime = transitTime;
     this._eventOffer = eventOffer;
     this._price = price;
+    this._randomTimeTransit = randomTimeTransit;
   }
 
   getTemplate() {
-    const randomTimeTransit = this._transitTime[
-      getCountRandom(0, this._transitTime.length)
-    ];
     return `
 <div class="event">
   <div class="event__type">
@@ -44,12 +43,14 @@ export class Event extends AbstractComponent {
       —
       <time class="event__end-time" datetime="${this._isDate.year}-${
       this._isDate.month
-    }-${this._isDate.dayPresent}T${this._isDate.hours + randomTimeTransit}:${
-      this._isDate.minutes
-    }">${this._isDate.hours + randomTimeTransit}:${this._isDate.minutes}</time>
+    }-${this._isDate.dayPresent}T${
+      this._isDate.hours + this._randomTimeTransit
+    }:${this._isDate.minutes}">${
+      this._isDate.hours + this._randomTimeTransit
+    }:${this._isDate.minutes}</time>
     </p>
     <p class="event__duration">${
-      this._isDate.hours + randomTimeTransit - this._isDate.hours
+      this._isDate.hours + this._randomTimeTransit - this._isDate.hours
     }H ${`00`}M</p>
   </div>
   <p class="event__price">

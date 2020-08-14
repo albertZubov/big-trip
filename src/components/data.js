@@ -24,6 +24,7 @@ export const getEvent = () => ({
     `Flight to Chamonix`,
   ],
   transitTime: [1, 2, 3, 4, 5],
+  randomTimeTransit: getCountRandom(0, 5),
   cities: [
     `Orel - city hero`,
     `Amsterdam`,
