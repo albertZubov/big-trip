@@ -34,9 +34,17 @@ export const createElement = (template) => {
   return newElement.firstElementChild;
 };
 
+export const copyArr = (arr) =>
+  Array.from(arr, (value) => (Array.isArray(value) ? copyArr(value) : value));
+
 export const renderWithChildren = (parent, children) => {
-  const domParent = createElement(parent);
+  let domParent = parent;
+
+  if (typeof parent === "string") {
+    domParent = createElement(parent);
+  }
   const childrenContainer = domParent.querySelector("children");
+
   if (childrenContainer) {
     childrenContainer.replaceWith(children);
   }

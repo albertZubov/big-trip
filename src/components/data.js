@@ -1,7 +1,5 @@
 import { getDate } from "./utils";
 
-const getRandomBoolean = () => Boolean(Math.round(Math.random()));
-
 const getRandomNumber = (number) => getCountRandom(1, number);
 
 export const getCountRandom = (min, max) =>
@@ -26,6 +24,7 @@ export const getEvent = () => ({
     `Flight to Chamonix`,
   ],
   transitTime: [1, 2, 3, 4, 5],
+  randomTimeTransit: getCountRandom(0, 5),
   cities: [
     `Orel - city hero`,
     `Amsterdam`,

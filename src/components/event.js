@@ -1,7 +1,8 @@
 import { getCountRandom } from "./data";
-import { createElement } from "./utils.js";
+import { AbstractComponent } from "./abstract-component";
 
-export class Event {
+/* eslint-disable indent */
+export class Event extends AbstractComponent {
   constructor({
     typeEventTransfer,
     title,
@@ -9,67 +10,61 @@ export class Event {
     transitTime,
     eventOffer,
     price,
+    randomTimeTransit,
   }) {
-    this.typeEventTransfer = typeEventTransfer;
-    this.title = title;
-    this.isDate = isDate;
-    this.transitTime = transitTime;
-    this.eventOffer = eventOffer;
-    this.price = price;
-    this.element = null;
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
+    super();
+    this._typeEventTransfer = typeEventTransfer;
+    this._title = title;
+    this._isDate = isDate;
+    this._transitTime = transitTime;
+    this._eventOffer = eventOffer;
+    this._price = price;
+    this._randomTimeTransit = randomTimeTransit;
   }
 
   getTemplate() {
-    const randomTimeTransit = this.transitTime[
-      getCountRandom(0, this.transitTime.length)
-    ];
     return `
 <div class="event">
   <div class="event__type">
     <img class="event__type-icon" width="42" height="42" src="img/icons/${
-      this.typeEventTransfer[getCountRandom(0, this.typeEventTransfer.length)]
+      this._typeEventTransfer[getCountRandom(0, this._typeEventTransfer.length)]
     }.png" alt="Event type icon">
   </div>
   <h3 class="event__title">${
-    this.title[getCountRandom(0, this.title.length)]
+    this._title[getCountRandom(0, this._title.length)]
   }</h3>
   <div class="event__schedule">
     <p class="event__time">
-      <time class="event__start-time" datetime="${this.isDate.year}-${
-      this.isDate.month
-    }-${this.isDate.dayPresent}T${this.isDate.timePresent}">${
-      this.isDate.timePresent
+      <time class="event__start-time" datetime="${this._isDate.year}-${
+      this._isDate.month
+    }-${this._isDate.dayPresent}T${this._isDate.timePresent}">${
+      this._isDate.timePresent
     }</time>
       —
-      <time class="event__end-time" datetime="${this.isDate.year}-${
-      this.isDate.month
-    }-${this.isDate.dayPresent}T${this.isDate.hours + randomTimeTransit}:${
-      this.isDate.minutes
-    }">${this.isDate.hours + randomTimeTransit}:${this.isDate.minutes}</time>
+      <time class="event__end-time" datetime="${this._isDate.year}-${
+      this._isDate.month
+    }-${this._isDate.dayPresent}T${
+      this._isDate.hours + this._randomTimeTransit
+    }:${this._isDate.minutes}">${
+      this._isDate.hours + this._randomTimeTransit
+    }:${this._isDate.minutes}</time>
     </p>
     <p class="event__duration">${
-      this.isDate.hours + randomTimeTransit - this.isDate.hours
+      this._isDate.hours + this._randomTimeTransit - this._isDate.hours
     }H ${`00`}M</p>
   </div>
   <p class="event__price">
-    €&nbsp;<span class="event__price-value">${this.price}</span>
+    €&nbsp;<span class="event__price-value">${this._price}</span>
   </p>
   <h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">
     <li class="event__offer">
       <span class="event__offer-title">${
-        this.eventOffer[getCountRandom(0, this.eventOffer.length)].title
+        this._eventOffer[getCountRandom(0, this._eventOffer.length)].title
       }</span>
       +
       €&nbsp;<span class="event__offer-price">${
-        this.eventOffer[getCountRandom(0, this.eventOffer.length)].price
+        this._eventOffer[getCountRandom(0, this._eventOffer.length)].price
       }</span>
      </li>
   </ul>

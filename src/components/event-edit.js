@@ -1,6 +1,7 @@
+import { AbstractComponent } from "./abstract-component";
+
 /* eslint-disable indent */
-import { createElement } from "./utils.js";
-export class EventEdit {
+export class EventEdit extends AbstractComponent {
   constructor({
     typeEventTransfer,
     typeEventActivity,
@@ -10,21 +11,15 @@ export class EventEdit {
     isDate,
     eventOffer,
   }) {
-    this.typeEventActivity = typeEventActivity;
-    this.typeEventTransfer = typeEventTransfer;
-    this.cities = cities;
-    this.photos = photos;
-    this.description = description;
-    this.isDate = isDate;
-    this.eventOffer = eventOffer;
-    this.element = null;
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
+    super();
+    this._typeEventActivity = typeEventActivity;
+    this._typeEventTransfer = typeEventTransfer;
+    this._cities = cities;
+    this._photos = photos;
+    this._description = description;
+    this._isDate = isDate;
+    this._eventOffer = eventOffer;
+    this._element = null;
   }
 
   getTemplate() {
@@ -42,7 +37,7 @@ export class EventEdit {
        <div class="event__type-list">
          <fieldset class="event__type-group">
            <legend class="visually-hidden">Transfer</legend>
-           ${this.typeEventTransfer
+           ${this._typeEventTransfer
              .map(
                (elem) => `
           <div class="event__type-item">
@@ -59,7 +54,7 @@ export class EventEdit {
   
          <fieldset class="event__type-group">
            <legend class="visually-hidden">Activity</legend>
-           ${this.typeEventActivity
+           ${this._typeEventActivity
              .map(
                (elem) => `
           <div class="event__type-item">
@@ -81,7 +76,7 @@ export class EventEdit {
        </label>
        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
        <datalist id="destination-list-1">
-       ${this.cities.map(
+       ${this._cities.map(
          (city) => `
        <option value="${city}"></option>
        `
@@ -94,18 +89,18 @@ export class EventEdit {
          From
        </label>
        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${
-         this.isDate.dayPresent
-       }/${this.isDate.monthNumber + 1}/${this.isDate.year} ${
-      this.isDate.timePresent
+         this._isDate.dayPresent
+       }/${this._isDate.monthNumber + 1}/${this._isDate.year} ${
+      this._isDate.timePresent
     }"> 
        —
        <label class="visually-hidden" for="event-end-time-1">
          To
        </label>
        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${
-         this.isDate.dayPresent + 1
-       }/${this.isDate.monthNumber + 1}/${this.isDate.year} ${
-      this.isDate.timePresent
+         this._isDate.dayPresent + 1
+       }/${this._isDate.monthNumber + 1}/${this._isDate.year} ${
+      this._isDate.timePresent
     }">
      </div>
   
@@ -136,7 +131,7 @@ export class EventEdit {
        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   
        <div class="event__available-offers">
-               ${this.eventOffer
+               ${this._eventOffer
                  .map(
                    (elem) => `
                <div class="event__offer-selector">
@@ -153,7 +148,7 @@ export class EventEdit {
      <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">
-          ${this.description}
+          ${this._description}
         </p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
@@ -162,7 +157,7 @@ export class EventEdit {
                     .map(
                       () => `
                     <img class="event__photo" src="http://picsum.photos/300/150?r=${Math.random(
-                      this.photos
+                      this._photos
                     )}" alt="Event photo">
                   `
                     )
