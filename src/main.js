@@ -1,6 +1,6 @@
 import { TripDay } from "./components/trip-days";
 import { getEvent } from "./components/data";
-import { TripController } from "./components/trip-controller";
+import { TripController } from "./controllers/trip";
 
 const EVENT_COUNT = 3;
 const DAY_COUNT = 3;

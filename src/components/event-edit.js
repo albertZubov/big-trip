@@ -8,8 +8,10 @@ export class EventEdit extends AbstractComponent {
     cities,
     photos,
     description,
-    isDate,
+    isDateStart,
+    isDateEnd,
     eventOffer,
+    favorites,
   }) {
     super();
     this._typeEventActivity = typeEventActivity;
@@ -17,7 +19,9 @@ export class EventEdit extends AbstractComponent {
     this._cities = cities;
     this._photos = photos;
     this._description = description;
-    this._isDate = isDate;
+    this._isDateStart = isDateStart;
+    this._isDateEnd = isDateEnd;
+    this._favorites = favorites;
     this._eventOffer = eventOffer;
     this._element = null;
   }
@@ -89,18 +93,18 @@ export class EventEdit extends AbstractComponent {
          From
        </label>
        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${
-         this._isDate.dayPresent
-       }/${this._isDate.monthNumber + 1}/${this._isDate.year} ${
-      this._isDate.timePresent
+         this._isDateStart.dayPresent
+       }/${this._isDateStart.monthNumber + 1}/${this._isDateStart.year} ${
+      this._isDateStart.timePresent
     }"> 
        —
        <label class="visually-hidden" for="event-end-time-1">
          To
        </label>
        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${
-         this._isDate.dayPresent + 1
-       }/${this._isDate.monthNumber + 1}/${this._isDate.year} ${
-      this._isDate.timePresent
+         this._isDateEnd.dayPresent + 1
+       }/${this._isDateEnd.monthNumber + 1}/${this._isDateEnd.year} ${
+      this._isDateEnd.timePresent
     }">
      </div>
   
@@ -114,7 +118,9 @@ export class EventEdit extends AbstractComponent {
   
      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
      <button class="event__reset-btn" type="reset">Cancel</button>
-     <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked="">
+     <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${
+       this._favorites ? `checked` : ``
+     }>
      <label class="event__favorite-btn" for="event-favorite-1">
        <span class="visually-hidden">Add to favorite</span>
        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -135,9 +141,19 @@ export class EventEdit extends AbstractComponent {
                  .map(
                    (elem) => `
                <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${elem.value}-1" type="checkbox" name="event-offer-${elem.value}" ${elem.checked}>
-                <label class="event__offer-label" for="event-offer-${elem.value}-1">
-                  <span class="event__offer-title">${elem.title}</span> + €&nbsp;<span class="event__offer-price">${elem.price}</span>
+                <input class="event__offer-checkbox  visually-hidden" id="event-offer-${
+                  elem.value
+                }-1" type="checkbox" name="event-offer-${elem.value}" ${
+                     elem.checked ? `checked` : ``
+                   }>
+                <label class="event__offer-label" for="event-offer-${
+                  elem.value
+                }-1">
+                  <span class="event__offer-title">${
+                    elem.title
+                  }</span> + €&nbsp;<span class="event__offer-price">${
+                     elem.price
+                   }</span>
                </label>
              </div>
                `

@@ -43,18 +43,25 @@ export const getEvent = () => ({
     `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.`,
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
   ].slice(0, getRandomNumber(4)),
-  isDate: getDate(new Date()),
+  isDateStart: getDate(new Date()),
+  isDateEnd: getDate(new Date()),
+  favorites: true,
   eventOffer: [
-    { value: `luggage`, title: `Add luggage`, price: `30` },
+    { value: `luggage`, title: `Add luggage`, price: `30`, checked: true },
     {
       value: `comfort`,
       title: `Switch to comfort class`,
       price: `50`,
-      checked: `checked`,
+      checked: false,
     },
-    { value: `meal`, title: `Add meal`, price: `70` },
-    { value: `seats`, title: `Choose seats`, price: `80`, checked: `checked` },
-    { value: `train`, title: `Travel by train`, price: `60` },
+    { value: `meal`, title: `Add meal`, price: `70`, checked: true },
+    { value: `seats`, title: `Choose seats`, price: `80`, checked: false },
+    {
+      value: `train`,
+      title: `Travel by train`,
+      price: `60`,
+      checked: false,
+    },
   ],
 });
 

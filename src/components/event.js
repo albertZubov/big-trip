@@ -6,7 +6,8 @@ export class Event extends AbstractComponent {
   constructor({
     typeEventTransfer,
     title,
-    isDate,
+    isDateStart,
+    isDateEnd,
     transitTime,
     eventOffer,
     price,
@@ -15,7 +16,8 @@ export class Event extends AbstractComponent {
     super();
     this._typeEventTransfer = typeEventTransfer;
     this._title = title;
-    this._isDate = isDate;
+    this._isDateStart = isDateStart;
+    this._isDateEnd = isDateEnd;
     this._transitTime = transitTime;
     this._eventOffer = eventOffer;
     this._price = price;
@@ -35,22 +37,22 @@ export class Event extends AbstractComponent {
   }</h3>
   <div class="event__schedule">
     <p class="event__time">
-      <time class="event__start-time" datetime="${this._isDate.year}-${
-      this._isDate.month
-    }-${this._isDate.dayPresent}T${this._isDate.timePresent}">${
-      this._isDate.timePresent
+      <time class="event__start-time" datetime="${this._isDateStart.year}-${
+      this._isDateStart.month
+    }-${this._isDateStart.dayPresent}T${this._isDateStart.timePresent}">${
+      this._isDateStart.timePresent
     }</time>
       —
-      <time class="event__end-time" datetime="${this._isDate.year}-${
-      this._isDate.month
-    }-${this._isDate.dayPresent}T${
-      this._isDate.hours + this._randomTimeTransit
-    }:${this._isDate.minutes}">${
-      this._isDate.hours + this._randomTimeTransit
-    }:${this._isDate.minutes}</time>
+      <time class="event__end-time" datetime="${this._isDateEnd.year}-${
+      this._isDateEnd.month
+    }-${this._isDateEnd.dayPresent}T${
+      this._isDateEnd.hours + this._randomTimeTransit
+    }:${this._isDateEnd.minutes}">${
+      this._isDateEnd.hours + this._randomTimeTransit
+    }:${this._isDateEnd.minutes}</time>
     </p>
     <p class="event__duration">${
-      this._isDate.hours + this._randomTimeTransit - this._isDate.hours
+      this._isDateStart.hours + this._randomTimeTransit - this._isDateEnd.hours
     }H ${`00`}M</p>
   </div>
   <p class="event__price">
