@@ -22,6 +22,10 @@ export class DaysController {
         }
         const { domEvent, domEventEdit } = el;
 
+        domEventEdit.querySelector(
+          `.event__type-icon`
+        ).src = domEvent.querySelector(`.event__type-icon`).src;
+
         const eventsContainer = renderWithChildren(
           new TripEvents().getElement(),
           domEvent
@@ -34,36 +38,45 @@ export class DaysController {
             const formData = new FormData(domEventEdit);
 
             const getObjDate = (date) => ({
-              dayPresent: date.split(/[\s:\/]/g)[0],
-              monthNumber: date.split(/[\s:\/]/g)[1],
-              year: date.split(/[\s:\/]/g)[2],
+              dayPresent: +date.split(/[\s:\/]/g)[0],
+              monthNumber: +date.split(/[\s:\/]/g)[1],
+              year: +date.split(/[\s:\/]/g)[2],
               timePresent: `${date.split(/[\s:\/]/g)[3]}:${
                 date.split(/[\s:\/]/g)[4]
               }`,
-              hours: date.split(/[\s:\/]/g)[3],
-              minutes: date.split(/[\s:\/]/g)[4],
+              hours: +date.split(/[\s:\/]/g)[3],
+              minutes: +date.split(/[\s:\/]/g)[4],
             });
 
             const dateChangeStart = formData.get(`event-start-time`);
             const dateChangeEnd = formData.get(`event-end-time`);
+
             const entry = {
-              cities: formData.get(`event-destination`),
+              typeEventTransfer: formData.get(`event-type`),
+              city: formData.get(`event-destination`),
+
+              description: el.description,
+              photos: el.photos,
+              randomTimeTransit: el.randomTimeTransit,
               isDateStart: getObjDate(dateChangeStart),
               isDateEnd: getObjDate(dateChangeEnd),
               price: formData.get(`event-price`),
               favourites:
                 formData.get(`event-favorite`) === `on` ? true : false,
-              offerSelector: el.eventOffer.map((offer) => {
+              eventOffer: el.eventOffer.map((offer) => {
                 offer.checked =
                   formData.get(`event-offer-${offer.value}`) === `on`
                     ? true
                     : false;
                 return offer;
               }),
-              offer: el.eventOffer,
             };
 
             console.log(entry);
+
+            this._onDataChange(entry, el);
+
+            document.removeEventListener(`keydown`, onEscKeyDown);
           });
 
         const btnEvent = domEvent.querySelector(".event__rollup-btn");

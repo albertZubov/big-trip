@@ -1,90 +1,99 @@
 import { AbstractComponent } from "./abstract-component";
+import {
+  getRandomBoolean,
+  getRandomNumber,
+  types,
+  citiesArr,
+  getTitleByType,
+} from "./data";
+
+const getTypeItems = (obj) => {
+  return Object.keys(obj)
+    .map((type) => {
+      return `
+        <div class="event__type-item">
+          <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" 
+          ${type === `flight` ? `checked` : ``}>
+          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">
+          ${type[0].toUpperCase() + type.slice(1)}</label>
+        </div>
+      `;
+    })
+    .join(``);
+};
 
 /* eslint-disable indent */
 export class EventEdit extends AbstractComponent {
   constructor({
     typeEventTransfer,
     typeEventActivity,
-    cities,
     photos,
     description,
     isDateStart,
     isDateEnd,
     eventOffer,
     favorites,
+    randomTimeTransit,
+    city,
+    icon,
+    typeOutput,
   }) {
     super();
+    this._typeOutput = typeOutput;
     this._typeEventActivity = typeEventActivity;
     this._typeEventTransfer = typeEventTransfer;
-    this._cities = cities;
+    this._city = city;
     this._photos = photos;
     this._description = description;
     this._isDateStart = isDateStart;
     this._isDateEnd = isDateEnd;
     this._favorites = favorites;
     this._eventOffer = eventOffer;
+    this._randomTimeTransit = randomTimeTransit;
+    this._icon = icon;
     this._element = null;
+
+    this._onChangeTypeEvent();
+    this._onChangeEventDestination();
   }
 
   getTemplate() {
     const COUNT_PHOTO = 5;
     return `
-  <form class="event  event--edit" action="#" method="post">
+    <form class="event  event--edit" action="#" method="post">
    <header class="event__header">
      <div class="event__type-wrapper">
        <label class="event__type  event__type-btn" for="event-type-toggle-1">
          <span class="visually-hidden">Choose event type</span>
-         <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+         <img class="event__type-icon" width="17" height="17" src="img/icons/${
+           this._typeEventTransfer
+         }.png" alt="Event type icon">
        </label>
        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
   
        <div class="event__type-list">
-         <fieldset class="event__type-group">
-           <legend class="visually-hidden">Transfer</legend>
-           ${this._typeEventTransfer
-             .map(
-               (elem) => `
-          <div class="event__type-item">
-            <input id="event-type-${elem}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${elem}" ${
-                 elem === `flight` ? `checked` : ``
-               }>
-            <label class="event__type-label  event__type-label--${elem}" for="event-type-${elem}-1">
-            ${elem[0].toUpperCase() + elem.slice(1)}</label>
-          </div>
-          `
-             )
-             .join(``)}
-         </fieldset>
-  
-         <fieldset class="event__type-group">
-           <legend class="visually-hidden">Activity</legend>
-           ${this._typeEventActivity
-             .map(
-               (elem) => `
-          <div class="event__type-item">
-            <input id="event-type-${elem}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${elem}">
-             <label class="event__type-label  event__type-label--${elem}" for="event-type-${elem}-1">${
-                 elem[0].toUpperCase() + elem.slice(1)
-               }</label>
-          </div>
-          `
-             )
-             .join(``)}
-         </fieldset>
+       ${types
+         .map((objTypes) => {
+           return `
+            <fieldset class="event__type-group">
+              <legend class="visually-hidden">Transfer</legend>
+              ${getTypeItems(objTypes)}
+            </fieldset>
+          `;
+         })
+         .join(``)}
        </div>
      </div>
   
      <div class="event__field-group  event__field-group--destination">
        <label class="event__label  event__type-output" for="event-destination-1">
-         Flight to
+         ${getTitleByType(this._typeEventTransfer)}
        </label>
-       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
+       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
+         this._city
+       }" list="destination-list-1">
        <datalist id="destination-list-1">
-       ${this._cities.map(
-         (city) => `
-       <option value="${city}"></option>
-       `
-       )}
+       <option value="${this._city}"></option >
        </datalist>
      </div>
   
@@ -104,8 +113,8 @@ export class EventEdit extends AbstractComponent {
        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${
          this._isDateEnd.dayPresent + 1
        }/${this._isDateEnd.monthNumber + 1}/${this._isDateEnd.year} ${
-      this._isDateEnd.timePresent
-    }">
+      this._isDateEnd.hours + this._randomTimeTransit
+    }:${this._isDateEnd.minutes}">
      </div>
   
      <div class="event__field-group  event__field-group--price">
@@ -164,7 +173,7 @@ export class EventEdit extends AbstractComponent {
      <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">
-          ${this._description}
+          ${this._description.slice(0, getRandomNumber(4))}
         </p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
@@ -182,7 +191,51 @@ export class EventEdit extends AbstractComponent {
         </div>
         </section>
    </section>
-  </form>
+    </form>
   `;
+  }
+
+  _onChangeTypeEvent() {
+    this.getElement()
+      .querySelector(`.event__type-list`)
+      .addEventListener(`click`, (event) => {
+        const { target } = event;
+        if (target.tagName !== `INPUT`) {
+          return;
+        }
+
+        const type = target.value;
+
+        this.getElement().querySelector(
+          `.event__type-output`
+        ).textContent = getTitleByType(type);
+
+        this.getElement().querySelector(
+          `.event__type-icon`
+        ).src = `img/icons/${type}.png`;
+
+        this.getElement()
+          .querySelectorAll(`.event__offer-checkbox`)
+          .forEach((eventCheck) => {
+            eventCheck.checked = getRandomBoolean();
+          });
+      });
+  }
+
+  _onChangeEventDestination() {
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, ({ target }) => {
+        const input = this.getElement().querySelector(
+          `.event__destination-description`
+        );
+        citiesArr.forEach((city) => {
+          if (target.value === city) {
+            input.textContent = this._description[
+              getRandomNumber(this._description.length)
+            ];
+          }
+        });
+      });
   }
 }

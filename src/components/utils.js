@@ -28,6 +28,10 @@ export const render = (container, element, posititon = `beforeEnd`) => {
   return container;
 };
 
+export const upperCase = (elem) => {
+  return !elem ? elem : elem[0].toUpperCase() + elem.slice(1);
+};
+
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;

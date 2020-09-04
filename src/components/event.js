@@ -1,27 +1,33 @@
-import { getCountRandom } from "./data";
+import { getCountRandom, getTitleByType } from "./data";
 import { AbstractComponent } from "./abstract-component";
 
 /* eslint-disable indent */
 export class Event extends AbstractComponent {
   constructor({
     typeEventTransfer,
-    title,
     isDateStart,
     isDateEnd,
     transitTime,
     eventOffer,
     price,
     randomTimeTransit,
+    city,
+    icon,
+    typeOutput,
+    typeEventActivity,
   }) {
     super();
+    this._typeEventActivity = typeEventActivity;
+    this._typeOutput = typeOutput;
+    this._icon = icon;
     this._typeEventTransfer = typeEventTransfer;
-    this._title = title;
     this._isDateStart = isDateStart;
     this._isDateEnd = isDateEnd;
     this._transitTime = transitTime;
     this._eventOffer = eventOffer;
     this._price = price;
     this._randomTimeTransit = randomTimeTransit;
+    this._city = city;
   }
 
   getTemplate() {
@@ -29,12 +35,12 @@ export class Event extends AbstractComponent {
 <div class="event">
   <div class="event__type">
     <img class="event__type-icon" width="42" height="42" src="img/icons/${
-      this._typeEventTransfer[getCountRandom(0, this._typeEventTransfer.length)]
+      this._typeEventTransfer
     }.png" alt="Event type icon">
   </div>
-  <h3 class="event__title">${
-    this._title[getCountRandom(0, this._title.length)]
-  }</h3>
+  <h3 class="event__title">${getTitleByType(this._typeEventTransfer)} ${
+      this._city
+    }</h3>
   <div class="event__schedule">
     <p class="event__time">
       <time class="event__start-time" datetime="${this._isDateStart.year}-${
@@ -45,14 +51,12 @@ export class Event extends AbstractComponent {
       —
       <time class="event__end-time" datetime="${this._isDateEnd.year}-${
       this._isDateEnd.month
-    }-${this._isDateEnd.dayPresent}T${
-      this._isDateEnd.hours + this._randomTimeTransit
-    }:${this._isDateEnd.minutes}">${
-      this._isDateEnd.hours + this._randomTimeTransit
-    }:${this._isDateEnd.minutes}</time>
+    }-${this._isDateEnd.dayPresent}T${this._isDateEnd.hours}:${
+      this._isDateEnd.minutes
+    }">${this._isDateEnd.hours}:${this._isDateEnd.minutes}</time>
     </p>
     <p class="event__duration">${
-      this._isDateStart.hours + this._randomTimeTransit - this._isDateEnd.hours
+      this._isDateEnd.hours - this._isDateStart.hours
     }H ${`00`}M</p>
   </div>
   <p class="event__price">
@@ -60,15 +64,17 @@ export class Event extends AbstractComponent {
   </p>
   <h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">
-    <li class="event__offer">
-      <span class="event__offer-title">${
-        this._eventOffer[getCountRandom(0, this._eventOffer.length)].title
-      }</span>
+    ${this._eventOffer
+      .map((objOffer) => {
+        return objOffer.checked
+          ? `<li class="event__offer">
+      <span class="event__offer-title">${objOffer.title}</span>
       +
-      €&nbsp;<span class="event__offer-price">${
-        this._eventOffer[getCountRandom(0, this._eventOffer.length)].price
-      }</span>
-     </li>
+      €&nbsp;<span class="event__offer-price">${objOffer.price}</span>
+     </li>`
+          : ``;
+      })
+      .join(``)}
   </ul>
   <button class="event__rollup-btn" type="button">
     <span class="visually-hidden">Open event</span>
