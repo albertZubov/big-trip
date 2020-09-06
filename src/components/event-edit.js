@@ -93,7 +93,11 @@ export class EventEdit extends AbstractComponent {
          this._city
        }" list="destination-list-1">
        <datalist id="destination-list-1">
-       <option value="${this._city}"></option >
+       ${citiesArr.map(
+         (city) => `
+      <option value="${city}"></option>
+      `
+       )}
        </datalist>
      </div>
   
@@ -103,7 +107,7 @@ export class EventEdit extends AbstractComponent {
        </label>
        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${
          this._isDateStart.dayPresent
-       }/${this._isDateStart.monthNumber + 1}/${this._isDateStart.year} ${
+       }/${+this._isDateStart.monthNumber + 1}/${this._isDateStart.year} ${
       this._isDateStart.timePresent
     }"> 
        —
@@ -111,9 +115,9 @@ export class EventEdit extends AbstractComponent {
          To
        </label>
        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${
-         this._isDateEnd.dayPresent + 1
-       }/${this._isDateEnd.monthNumber + 1}/${this._isDateEnd.year} ${
-      this._isDateEnd.hours + this._randomTimeTransit
+         +this._isDateEnd.dayPresent + 1
+       }/${+this._isDateEnd.monthNumber + 1}/${this._isDateEnd.year} ${
+      +this._isDateEnd.hours + this._randomTimeTransit
     }:${this._isDateEnd.minutes}">
      </div>
   

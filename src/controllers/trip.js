@@ -15,6 +15,8 @@ export class TripController {
     this._tripEventsDom = document.querySelector(`.trip-events`);
 
     this._onDataChange = this._onDataChange.bind(this);
+    this._onChangeView = this._onChangeView.bind(this);
+    this._activeEvent = null;
   }
 
   init() {
@@ -41,10 +43,22 @@ export class TripController {
 
   _renderDays(data) {
     return new DaysController(
-      this._container,
       data,
-      this._onDataChange
+      this._onDataChange,
+      this._onChangeView
     ).create();
+  }
+
+  _onChangeView(event) {
+    if (
+      this._activeEvent &&
+      event !== this._activeEvent &&
+      this._activeEvent.domEventEdit.parentNode
+    ) {
+      this._activeEvent.closeEdit();
+    }
+
+    this._activeEvent = event;
   }
 
   _update(data) {
