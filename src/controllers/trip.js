@@ -1,22 +1,22 @@
-import { Day } from "./day";
-import { EventEdit } from "./event-edit";
-import { Event } from "./event";
-import { createFilter } from "./filter";
-import { createMenuInfo } from "./menu-info";
-import { createMenu } from "./menu";
-import { Sort } from "./sort";
-import { getMenuData } from "./data";
-import { render, renderWithChildren, copyArr } from "./utils";
-import { TripEvents } from "./trip-events";
+import { createFilter } from "../components/filter";
+import { createMenuInfo } from "../components/menu-info";
+import { createMenu } from "../components/menu";
+import { Sort } from "../components/sort";
+import { getMenuData } from "../components/data";
+import { render, renderWithChildren, copyArr } from "../components/utils";
+import { DaysController } from "./days";
 
 export class TripController {
   constructor(container, days) {
     this._container = container;
     this._days = days;
-    this._newDays = null;
+    this._tripDays - null;
     this._sort = new Sort();
     this._tripEventsDom = document.querySelector(`.trip-events`);
-    this._flag = true;
+
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onChangeView = this._onChangeView.bind(this);
+    this._activeEvent = null;
   }
 
   init() {
@@ -42,52 +42,40 @@ export class TripController {
   }
 
   _renderDays(data) {
-    const daysMarkup = document.createDocumentFragment();
-    data.forEach((dayOfEventsData, id) => {
-      const arrEvents = document.createDocumentFragment();
-      dayOfEventsData.forEach((el) => {
-        if (!el.domEvent) {
-          el.domEvent = new Event(el).getElement();
-          el.domEventEdit = new EventEdit(el).getElement();
-        }
-        const { domEvent, domEventEdit } = el;
+    return new DaysController(
+      data,
+      this._onDataChange,
+      this._onChangeView
+    ).create();
+  }
 
-        const eventsContainer = renderWithChildren(
-          new TripEvents().getElement(),
-          domEvent
-        );
+  _onChangeView(event) {
+    if (
+      this._activeEvent &&
+      event !== this._activeEvent &&
+      this._activeEvent.domEventEdit.parentNode
+    ) {
+      this._activeEvent.closeEdit();
+    }
 
-        const btnEvent = domEvent.querySelector(".event__rollup-btn");
-        const btnEventEdit = domEventEdit.querySelector(".event__rollup-btn");
-
-        const onEscKeyDown = (evt) => {
-          if (evt.key === `Escape` || evt.ket === `Esc`) {
-            eventsContainer.replaceChild(domEvent, domEventEdit);
-            document.removeEventListener(`keydown`, onEscKeyDown);
-          }
-        };
-
-        btnEvent.addEventListener("click", () => {
-          eventsContainer.replaceChild(domEventEdit, domEvent);
-          document.addEventListener(`keydown`, onEscKeyDown);
-        });
-
-        btnEventEdit.addEventListener(`click`, () => {
-          eventsContainer.replaceChild(domEvent, domEventEdit);
-          document.removeEventListener(`keydown`, onEscKeyDown);
-        });
-
-        arrEvents.append(eventsContainer);
-      });
-      const day = new Day(id, arrEvents).getElement();
-      daysMarkup.append(day);
-    });
-    return daysMarkup;
+    this._activeEvent = event;
   }
 
   _update(data) {
     this._tripDays.innerHTML = ``;
     render(this._tripDays, this._renderDays(data));
+  }
+
+  _cleanContainer() {
+    this._container.innerHTML = ``;
+  }
+
+  _onDataChange(newData, oldData) {
+    this._days.forEach((day) => {
+      day[day.findIndex((item) => item === oldData)] = newData;
+    });
+    this._cleanContainer();
+    render(this._container, this._renderDays(this._days));
   }
 
   /* eslint-disable */
