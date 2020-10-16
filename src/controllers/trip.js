@@ -1,39 +1,25 @@
-import { createFilter } from "../components/filter";
-import { createMenuInfo } from "../components/menu-info";
-import { createMenu } from "../components/menu";
-import { Sort } from "../components/sort";
-import { getMenuData } from "../components/data";
 import { render, renderWithChildren, copyArr } from "../components/utils";
 import { DaysController } from "./days";
+import { TripDay } from "../components/trip-days";
+import { Sort } from "../components/sort";
 
 export class TripController {
-  constructor(container, days) {
-    this._container = container;
+  constructor(days) {
     this._days = days;
-    this._tripDays - null;
+    this._tripDays = renderWithChildren(
+      new TripDay().getElement(),
+      this._renderDays(this._days)
+    );
     this._sort = new Sort();
     this._tripEventsDom = document.querySelector(`.trip-events`);
 
-    this._onDataChange = this._onDataChange.bind(this);
-    this._onChangeView = this._onChangeView.bind(this);
+    // this._onChangeView = this._onChangeView.bind(this);
+    // this._onDataChange = this._onDataChange.bind(this);
     this._activeEvent = null;
   }
 
   init() {
-    const tripMain = document.querySelector(`.trip-main`);
-    const tripMenu = tripMain.querySelector(`.trip-controls`);
-    const tripMenuFirstTitle = tripMenu.querySelector(`.visually-hidden`);
-
-    render(tripMain, createMenuInfo(this._days, getMenuData()), `afterBegin`);
-    render(tripMenuFirstTitle, createMenu(), `afterEnd`);
-    render(tripMenu, createFilter());
     render(this._tripEventsDom, this._sort.getElement());
-
-    this._tripDays = renderWithChildren(
-      this._container,
-      this._renderDays(this._days)
-    );
-
     render(this._tripEventsDom, this._tripDays);
 
     this._sort
@@ -41,11 +27,11 @@ export class TripController {
       .addEventListener(`click`, (evt) => this._onClickSort(evt));
   }
 
-  _renderDays(data) {
+  _renderDays(days) {
     return new DaysController(
-      data,
-      this._onDataChange,
-      this._onChangeView
+      days,
+      this._onDataChange.bind(this),
+      this._onChangeView.bind(this)
     ).create();
   }
 
@@ -61,21 +47,29 @@ export class TripController {
     this._activeEvent = event;
   }
 
+  _onDataChange(newData, oldData) {
+    this._days.forEach((day) => {
+      day[day.findIndex((item) => item === oldData)] = newData;
+    });
+    this._cleanContainer();
+    render(this._tripDays, this._renderDays(this._days));
+  }
+
   _update(data) {
     this._tripDays.innerHTML = ``;
     render(this._tripDays, this._renderDays(data));
   }
 
   _cleanContainer() {
-    this._container.innerHTML = ``;
+    this._tripDays.innerHTML = ``;
   }
 
-  _onDataChange(newData, oldData) {
-    this._days.forEach((day) => {
-      day[day.findIndex((item) => item === oldData)] = newData;
-    });
-    this._cleanContainer();
-    render(this._container, this._renderDays(this._days));
+  hide() {
+    this._tripEventsDom.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._tripEventsDom.classList.remove(`visually-hidden`);
   }
 
   /* eslint-disable */

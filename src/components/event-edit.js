@@ -6,21 +6,9 @@ import {
   citiesArr,
   getTitleByType,
 } from "./data";
-
-const getTypeItems = (obj) => {
-  return Object.keys(obj)
-    .map((type) => {
-      return `
-        <div class="event__type-item">
-          <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" 
-          ${type === `flight` ? `checked` : ``}>
-          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">
-          ${type[0].toUpperCase() + type.slice(1)}</label>
-        </div>
-      `;
-    })
-    .join(``);
-};
+import "flatpickr/dist/flatpickr.min.css";
+import "flatpickr/dist/themes/light.css";
+import flatpickr from "flatpickr";
 
 /* eslint-disable indent */
 export class EventEdit extends AbstractComponent {
@@ -55,10 +43,27 @@ export class EventEdit extends AbstractComponent {
 
     this._onChangeTypeEvent();
     this._onChangeEventDestination();
+    // this._flatpickr();
   }
 
   getTemplate() {
     const COUNT_PHOTO = 5;
+
+    const getTypeItems = (obj) => {
+      return Object.keys(obj)
+        .map((type) => {
+          return `
+            <div class="event__type-item">
+              <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" 
+              ${type === this._typeEventTransfer ? `checked` : ``}>
+              <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">
+              ${type[0].toUpperCase() + type.slice(1)}</label>
+            </div>
+          `;
+        })
+        .join(``);
+    };
+
     return `
     <form class="event  event--edit" action="#" method="post">
    <header class="event__header">
@@ -81,7 +86,7 @@ export class EventEdit extends AbstractComponent {
             </fieldset>
           `;
          })
-         .join(``)}
+         .join(``)} 
        </div>
      </div>
   
@@ -199,31 +204,41 @@ export class EventEdit extends AbstractComponent {
   `;
   }
 
+  _flatpickr() {
+    flatpickr(this.getElement().querySelector(`.event__input--time`), {
+      altInput: true,
+      allowInput: true,
+      defaultDate: Date.now(),
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+    });
+  }
+
   _onChangeTypeEvent() {
-    this.getElement()
-      .querySelector(`.event__type-list`)
-      .addEventListener(`click`, (event) => {
-        const { target } = event;
-        if (target.tagName !== `INPUT`) {
-          return;
-        }
+    const typeList = this.getElement().querySelector(`.event__type-list`);
 
-        const type = target.value;
+    typeList.addEventListener(`click`, (event) => {
+      const { target } = event;
+      if (target.tagName !== `INPUT`) {
+        return;
+      }
 
-        this.getElement().querySelector(
-          `.event__type-output`
-        ).textContent = getTitleByType(type);
+      const type = target.value;
 
-        this.getElement().querySelector(
-          `.event__type-icon`
-        ).src = `img/icons/${type}.png`;
+      this.getElement().querySelector(
+        `.event__type-output`
+      ).textContent = getTitleByType(type);
 
-        this.getElement()
-          .querySelectorAll(`.event__offer-checkbox`)
-          .forEach((eventCheck) => {
-            eventCheck.checked = getRandomBoolean();
-          });
-      });
+      this.getElement().querySelector(
+        `.event__type-icon`
+      ).src = `img/icons/${type}.png`;
+
+      this.getElement()
+        .querySelectorAll(`.event__offer-checkbox`)
+        .forEach((eventCheck) => {
+          eventCheck.checked = getRandomBoolean();
+        });
+    });
   }
 
   _onChangeEventDestination() {

@@ -1,4 +1,4 @@
-import { getCountRandom, getTitleByType } from "./data";
+import { getTitleByType } from "./data";
 import { AbstractComponent } from "./abstract-component";
 
 /* eslint-disable indent */

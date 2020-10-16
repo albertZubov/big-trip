@@ -1,13 +1,12 @@
-import { TripDay } from "./components/trip-days";
-import { getEvent } from "./components/data";
-import { TripController } from "./controllers/trip";
+import { MainController } from "./controllers/main";
 
-const EVENT_COUNT = 3;
-const DAY_COUNT = 3;
-const tripDays = new TripDay().getElement();
+export const pageBody = document.querySelector(`.page-body`);
+export const tripMain = pageBody.querySelector(`.trip-main`);
+export const pageMain = pageBody.querySelector(`.page-main`);
+export const pageBodyContainer = pageMain.querySelector(
+  `.page-body__container`
+);
 
-const eventsArrData = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
-const daysArrData = new Array(DAY_COUNT).fill(``).map(eventsArrData);
-
-const tripController = new TripController(tripDays, daysArrData);
-tripController.init();
+// Запуск контроллера MainController
+const mainController = new MainController();
+mainController._init();
