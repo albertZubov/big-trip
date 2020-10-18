@@ -75,6 +75,12 @@ export class EventController {
           document.removeEventListener(`keydown`, onEscKeyDown);
         });
 
+      this._event.domEventEdit
+        .querySelector(`.event__reset-btn`)
+        .addEventListener(`click`, () => {
+          this._onDataChange(null, this._event);
+        });
+
       const btnEvent = this._event.domEvent.querySelector(".event__rollup-btn");
       const btnEventEdit = this._event.domEventEdit.querySelector(
         ".event__rollup-btn"
