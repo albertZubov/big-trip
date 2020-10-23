@@ -38,8 +38,12 @@ export class MainController {
     /* eslint-disable */
     // Добавление обработчика события на кнопки - статистика/таблица
     const tripBtnTabs = tripMain.querySelector(`.trip-tabs`);
-    tripBtnTabs.addEventListener(`click`, (evt) => {
+    tripMain.addEventListener(`click`, (evt) => {
       const { target } = evt;
+
+      if (target.tagName !== `A` && target.tagName !== `BUTTON`) {
+        return;
+      }
 
       if (Array.from(target.classList).includes(`trip-tabs__btn--active`)) {
         return;
@@ -49,7 +53,7 @@ export class MainController {
         });
       }
 
-      switch (target.textContent) {
+      switch (target.outerText) {
         case "Stats":
           this._tripController.hide();
           this._statisticsController.show();
@@ -58,6 +62,10 @@ export class MainController {
         case "Table":
           this._tripController.show();
           this._statisticsController.hide();
+          break;
+
+        case "New event":
+          this._tripController._createEvent();
           break;
       }
     });

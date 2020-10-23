@@ -2,6 +2,12 @@ import { render, renderWithChildren, copyArr } from "../components/utils";
 import { DaysController } from "./days";
 import { TripDay } from "../components/trip-days";
 import { Sort } from "../components/sort";
+import { getEvent } from "../components/data";
+
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
 
 export class TripController {
   constructor(days) {
@@ -12,6 +18,7 @@ export class TripController {
     );
     this._sort = new Sort();
     this._tripEventsDom = document.querySelector(`.trip-events`);
+    this._creatingEvent = null;
 
     // this._onChangeView = this._onChangeView.bind(this);
     // this._onDataChange = this._onDataChange.bind(this);
@@ -31,8 +38,38 @@ export class TripController {
     return new DaysController(
       days,
       this._onDataChange.bind(this),
-      this._onChangeView.bind(this)
+      this._onChangeView.bind(this),
+      Mode.DEFAULT
     ).create();
+  }
+
+  _createEvent() {
+    if (this._creatingEvent) {
+      return;
+    }
+
+    const defaultEvent = {
+      typeEventTransfer: getEvent().typeEventTransfer,
+      city: getEvent().city,
+      description: getEvent().description,
+      randomTimeTransit: getEvent().randomTimeTransit,
+      isDateStart: getEvent().isDateStart,
+      isDateEnd: getEvent().isDateEnd,
+      price: getEvent().price,
+      favourites: getEvent().favorites,
+      eventOffer: getEvent().eventOffer,
+    };
+
+    this._creatingEvent = new DaysController(
+      this._days,
+      this._onDataChange.bind(this),
+      this._onChangeView.bind(this),
+      Mode.ADDING,
+      defaultEvent
+    );
+
+    this._cleanContainer();
+    render(this._tripDays, this._creatingEvent.create());
   }
 
   _onChangeView(event) {
@@ -48,10 +85,31 @@ export class TripController {
   }
 
   _onDataChange(newData, oldData) {
-    this._days.forEach((day) => {
-      day[day.findIndex((item) => item === oldData)] = newData;
+    let indexEvent = null;
+    const indexDay = this._days.findIndex((days) => {
+      indexEvent = days.findIndex((event) => event === oldData);
+      return days.find((event) => event === oldData);
     });
+
+    //   let lengthArrayDays = this._days[indexDay].length - 1;
+    //   const elem = this._days.map((day, ind) => {
+    //     if (!lengthArrayDays) {
+    //       this._days.splice(ind, 1);
+    //       console.log(123);
+    //     }
+    //     return day;
+    //   });
+    //  console.log(elem);
+
+    if (newData === null) {
+      this._days[indexDay].splice(indexEvent, 1);
+    } else if (oldData === null) {
+      this._creatingEvent = null;
+    } else {
+      this._days[indexDay][indexEvent] = newData;
+    }
     this._cleanContainer();
+
     render(this._tripDays, this._renderDays(this._days));
   }
 
