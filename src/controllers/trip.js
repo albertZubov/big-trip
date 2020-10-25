@@ -91,23 +91,25 @@ export class TripController {
       return days.find((event) => event === oldData);
     });
 
-    //   let lengthArrayDays = this._days[indexDay].length - 1;
-    //   const elem = this._days.map((day, ind) => {
-    //     if (!lengthArrayDays) {
-    //       this._days.splice(ind, 1);
-    //       console.log(123);
-    //     }
-    //     return day;
-    //   });
-    //  console.log(elem);
-
-    if (newData === null) {
+    if (oldData === null && newData === null) {
+      this._days[0].splice(0, 1);
+      this._creatingEvent = null;
+    } else if (newData === null) {
       this._days[indexDay].splice(indexEvent, 1);
     } else if (oldData === null) {
       this._creatingEvent = null;
     } else {
       this._days[indexDay][indexEvent] = newData;
     }
+
+    // Если нету ни одного события в дне, то он удаляется
+    this._days.map((day, ind) => {
+      if (!day.length) {
+        this._days.splice(ind, 1);
+      }
+      return day;
+    });
+
     this._cleanContainer();
 
     render(this._tripDays, this._renderDays(this._days));

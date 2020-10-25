@@ -45,12 +45,14 @@ export class MainController {
         return;
       }
 
-      if (Array.from(target.classList).includes(`trip-tabs__btn--active`)) {
-        return;
-      } else {
-        Array.from(tripBtnTabs.children).forEach((btn) => {
-          btn.classList.toggle(`trip-tabs__btn--active`);
-        });
+      if (target.tagName === `A`) {
+        if (Array.from(target.classList).includes(`trip-tabs__btn--active`)) {
+          return;
+        } else {
+          Array.from(tripBtnTabs.children).forEach((btn) => {
+            btn.classList.toggle(`trip-tabs__btn--active`);
+          });
+        }
       }
 
       switch (target.outerText) {

@@ -35,12 +35,29 @@ export class EventController {
   }
 
   init() {
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        if (this._mode === Mode.DEFAULT) {
+          this._event.closeEdit();
+        } else if (this._mode === Mode.ADDING) {
+          this._onDataChange(null, null);
+        }
+        // } else if (this._mode === Mode.ADDING) {
+        //   console.log(123);
+        //   // this._container.removeChild(currentEvent);
+        // }
+
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
     this._event.domEvent = new Event(this._event).getElement();
     this._event.domEventEdit = new EventEdit(this._event).getElement();
 
     let currentEvent = this._event.domEvent;
     if (this._mode === Mode.ADDING) {
       currentEvent = this._event.domEventEdit;
+      document.addEventListener(`keydown`, onEscKeyDown);
     }
 
     // if (this._event.domEvent) {
@@ -96,20 +113,6 @@ export class EventController {
       ".event__rollup-btn"
     );
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.ket === `Esc`) {
-        console.log(1);
-        if (this._mode === Mode.DEFAULT) {
-          this._event.closeEdit();
-        } else if (this._mode === Mode.ADDING) {
-          console.log(123);
-          // this._container.removeChild(currentEvent);
-        }
-
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
     btnEvent.addEventListener("click", () => {
       this._onChangeView(this._event);
       this._event.showEdit();
@@ -117,8 +120,12 @@ export class EventController {
     });
 
     btnEventEdit.addEventListener(`click`, () => {
-      this._event.closeEdit();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      if (this._mode === Mode.ADDING) {
+        return;
+      } else {
+        this._event.closeEdit();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
     });
     // }
     return renderWithChildren(new TripEvents().getElement(), currentEvent);
