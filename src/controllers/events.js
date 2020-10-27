@@ -27,7 +27,7 @@ export class EventController {
     };
   }
 
-  updateOffers(el, formData) {
+  _updateOffers(el, formData) {
     return el.eventOffer.map((offer) => {
       offer.checked = formData.get(`event-offer-${offer.value}`) === `on`;
       return offer;
@@ -42,10 +42,6 @@ export class EventController {
         } else if (this._mode === Mode.ADDING) {
           this._onDataChange(null, null);
         }
-        // } else if (this._mode === Mode.ADDING) {
-        //   console.log(123);
-        //   // this._container.removeChild(currentEvent);
-        // }
 
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
@@ -90,8 +86,8 @@ export class EventController {
           isDateStart: this.getObjDate(dateChangeStart),
           isDateEnd: this.getObjDate(dateChangeEnd),
           price: formData.get(`event-price`),
-          favourites: formData.get(`event-favorite`) === `on`,
-          eventOffer: this.updateOffers(this._event, formData),
+          favorites: formData.get(`event-favorite`) === `on`,
+          eventOffer: this._updateOffers(this._event, formData),
         };
 
         this._onDataChange(

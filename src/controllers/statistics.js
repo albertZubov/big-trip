@@ -1,6 +1,6 @@
 import { Statistics } from "../components/statistics";
 import { render } from "../components/utils";
-import { pageBodyContainer } from "../main";
+import { pageBodyContainer } from "./main";
 
 export class StatisticsController {
   constructor(days) {

@@ -25,12 +25,14 @@ export class EventEdit extends AbstractComponent {
     city,
     icon,
     typeOutput,
+    price,
   }) {
     super();
     this._typeOutput = typeOutput;
     this._typeEventActivity = typeEventActivity;
     this._typeEventTransfer = typeEventTransfer;
     this._city = city;
+    this._price = price;
     this._photos = photos;
     this._description = description;
     this._isDateStart = isDateStart;
@@ -131,7 +133,9 @@ export class EventEdit extends AbstractComponent {
          <span class="visually-hidden">Price</span>
          €
        </label>
-       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${
+         this._price
+       }">
      </div>
   
      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

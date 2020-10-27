@@ -6,7 +6,13 @@ import { createMenu } from "../components/menu";
 import { getMenuData } from "../components/data";
 import { render } from "../components/utils";
 import { StatisticsController } from "./statistics";
-import { tripMain } from "../main";
+
+const pageBody = document.querySelector(`.page-body`);
+const tripMain = pageBody.querySelector(`.trip-main`);
+const pageMain = pageBody.querySelector(`.page-main`);
+export const pageBodyContainer = pageMain.querySelector(
+  `.page-body__container`
+);
 
 const EVENT_COUNT = 3;
 const DAY_COUNT = 3;
@@ -22,7 +28,7 @@ export class MainController {
     this._tripMenu = tripMain.querySelector(`.trip-controls`);
   }
 
-  _init() {
+  init() {
     this._renderPage();
   }
 
@@ -55,19 +61,19 @@ export class MainController {
         }
       }
 
-      switch (target.outerText) {
-        case "Stats":
+      switch (target.dataset.eventClick) {
+        case "stats":
           this._tripController.hide();
           this._statisticsController.show();
           break;
 
-        case "Table":
+        case "table":
           this._tripController.show();
           this._statisticsController.hide();
           break;
 
-        case "New event":
-          this._tripController._createEvent();
+        case "addEvent":
+          this._tripController.createEvent();
           break;
       }
     });

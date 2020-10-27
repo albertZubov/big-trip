@@ -43,22 +43,12 @@ export class TripController {
     ).create();
   }
 
-  _createEvent() {
+  createEvent() {
     if (this._creatingEvent) {
       return;
     }
 
-    const defaultEvent = {
-      typeEventTransfer: getEvent().typeEventTransfer,
-      city: getEvent().city,
-      description: getEvent().description,
-      randomTimeTransit: getEvent().randomTimeTransit,
-      isDateStart: getEvent().isDateStart,
-      isDateEnd: getEvent().isDateEnd,
-      price: getEvent().price,
-      favourites: getEvent().favorites,
-      eventOffer: getEvent().eventOffer,
-    };
+    const defaultEvent = getEvent();
 
     this._creatingEvent = new DaysController(
       this._days,
@@ -85,6 +75,9 @@ export class TripController {
   }
 
   _onDataChange(newData, oldData) {
+    // ДОРАБОТАТЬ
+    // console.log(newData.favorites);
+
     let indexEvent = null;
     const indexDay = this._days.findIndex((days) => {
       indexEvent = days.findIndex((event) => event === oldData);
@@ -98,17 +91,13 @@ export class TripController {
       this._days[indexDay].splice(indexEvent, 1);
     } else if (oldData === null) {
       this._creatingEvent = null;
+      this._days[0] = [newData, ...this._days[0]];
     } else {
       this._days[indexDay][indexEvent] = newData;
     }
 
     // Если нету ни одного события в дне, то он удаляется
-    this._days.map((day, ind) => {
-      if (!day.length) {
-        this._days.splice(ind, 1);
-      }
-      return day;
-    });
+    this._days = this._days.filter((day) => day.length);
 
     this._cleanContainer();
 
