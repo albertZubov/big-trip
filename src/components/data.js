@@ -37,7 +37,7 @@ export const getTitleByType = (type) => {
   return typesObj[type];
 };
 
-const getKey = (obj) => {
+export const getKey = (obj) => {
   const keys = Object.keys(obj);
   return keys[getRandomNumber(keys.length)];
 };
