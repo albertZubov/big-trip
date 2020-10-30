@@ -1,39 +1,32 @@
-import { createFilter } from "../components/filter";
-import { createMenuInfo } from "../components/menu-info";
-import { createMenu } from "../components/menu";
-import { Sort } from "../components/sort";
-import { getMenuData } from "../components/data";
 import { render, renderWithChildren, copyArr } from "../components/utils";
 import { DaysController } from "./days";
+import { TripDay } from "../components/trip-days";
+import { Sort } from "../components/sort";
+import { getEvent } from "../components/data";
+
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
 
 export class TripController {
-  constructor(container, days) {
-    this._container = container;
+  constructor(days) {
     this._days = days;
-    this._tripDays - null;
+    this._tripDays = renderWithChildren(
+      new TripDay().getElement(),
+      this._renderDays(this._days)
+    );
     this._sort = new Sort();
     this._tripEventsDom = document.querySelector(`.trip-events`);
+    this._creatingEvent = null;
 
-    this._onDataChange = this._onDataChange.bind(this);
-    this._onChangeView = this._onChangeView.bind(this);
+    // this._onChangeView = this._onChangeView.bind(this);
+    // this._onDataChange = this._onDataChange.bind(this);
     this._activeEvent = null;
   }
 
   init() {
-    const tripMain = document.querySelector(`.trip-main`);
-    const tripMenu = tripMain.querySelector(`.trip-controls`);
-    const tripMenuFirstTitle = tripMenu.querySelector(`.visually-hidden`);
-
-    render(tripMain, createMenuInfo(this._days, getMenuData()), `afterBegin`);
-    render(tripMenuFirstTitle, createMenu(), `afterEnd`);
-    render(tripMenu, createFilter());
     render(this._tripEventsDom, this._sort.getElement());
-
-    this._tripDays = renderWithChildren(
-      this._container,
-      this._renderDays(this._days)
-    );
-
     render(this._tripEventsDom, this._tripDays);
 
     this._sort
@@ -41,12 +34,32 @@ export class TripController {
       .addEventListener(`click`, (evt) => this._onClickSort(evt));
   }
 
-  _renderDays(data) {
+  _renderDays(days) {
     return new DaysController(
-      data,
-      this._onDataChange,
-      this._onChangeView
+      days,
+      this._onDataChange.bind(this),
+      this._onChangeView.bind(this),
+      Mode.DEFAULT
     ).create();
+  }
+
+  createEvent() {
+    if (this._creatingEvent) {
+      return;
+    }
+
+    const defaultEvent = getEvent();
+
+    this._creatingEvent = new DaysController(
+      this._days,
+      this._onDataChange.bind(this),
+      this._onChangeView.bind(this),
+      Mode.ADDING,
+      defaultEvent
+    );
+
+    this._cleanContainer();
+    render(this._tripDays, this._creatingEvent.create());
   }
 
   _onChangeView(event) {
@@ -61,21 +74,51 @@ export class TripController {
     this._activeEvent = event;
   }
 
+  _onDataChange(newData, oldData) {
+    // ДОРАБОТАТЬ
+    // console.log(newData.favorites);
+
+    let indexEvent = null;
+    const indexDay = this._days.findIndex((days) => {
+      indexEvent = days.findIndex((event) => event === oldData);
+      return days.find((event) => event === oldData);
+    });
+
+    if (oldData === null && newData === null) {
+      this._days[0].splice(0, 1);
+      this._creatingEvent = null;
+    } else if (newData === null) {
+      this._days[indexDay].splice(indexEvent, 1);
+    } else if (oldData === null) {
+      this._creatingEvent = null;
+      this._days[0] = [newData, ...this._days[0]];
+    } else {
+      this._days[indexDay][indexEvent] = newData;
+    }
+
+    // Если нету ни одного события в дне, то он удаляется
+    this._days = this._days.filter((day) => day.length);
+
+    this._cleanContainer();
+
+    render(this._tripDays, this._renderDays(this._days));
+  }
+
   _update(data) {
     this._tripDays.innerHTML = ``;
     render(this._tripDays, this._renderDays(data));
   }
 
   _cleanContainer() {
-    this._container.innerHTML = ``;
+    this._tripDays.innerHTML = ``;
   }
 
-  _onDataChange(newData, oldData) {
-    this._days.forEach((day) => {
-      day[day.findIndex((item) => item === oldData)] = newData;
-    });
-    this._cleanContainer();
-    render(this._container, this._renderDays(this._days));
+  hide() {
+    this._tripEventsDom.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._tripEventsDom.classList.remove(`visually-hidden`);
   }
 
   /* eslint-disable */
