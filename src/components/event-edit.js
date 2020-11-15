@@ -186,7 +186,7 @@ export class EventEdit extends AbstractComponent {
      <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">
-          ${this._description.slice(0, getRandomNumber(4))}
+          ${this._description}
         </p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
@@ -254,9 +254,7 @@ export class EventEdit extends AbstractComponent {
         );
         citiesArr.forEach((city) => {
           if (target.value === city) {
-            input.textContent = this._description[
-              getRandomNumber(this._description.length)
-            ];
+            input.textContent = this._description;
           }
         });
       });

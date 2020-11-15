@@ -7,7 +7,7 @@ export class DaysController {
     this._days = days;
     this._onDataChange = onDataChange;
     this._onChangeView = onChangeView;
-    this._mode = mode;
+    this._mode = mode; 
     this._defaulfEvent = defaulfEvent;
   }
 

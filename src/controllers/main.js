@@ -14,28 +14,46 @@ export const pageBodyContainer = pageMain.querySelector(
   `.page-body__container`
 );
 
-const EVENT_COUNT = 3;
-const DAY_COUNT = 3;
+const EVENT_COUNT = 4;
+// const DAY_COUNT = 3;
 
-const renderEvents = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
-const days = new Array(DAY_COUNT).fill(``).map(renderEvents);
+// const renderEvents = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
+// const days = new Array(DAY_COUNT).fill(``).map(renderEvents);
 
 export class MainController {
   constructor() {
-    this._statisticsController = new StatisticsController(days);
-    this._tripController = new TripController(days);
+    this._statisticsController = null;
+    this._tripController = null;
 
     this._tripMenu = tripMain.querySelector(`.trip-controls`);
+    this._days = null;
   }
 
-  init() {
+  init(events) {
+    this._renderDaysIsEvent(events);
+    this._statisticsController = new StatisticsController(this._days);
+    this._tripController = new TripController(this._days);
     this._renderPage();
+  }
+
+  _renderDaysIsEvent(events) {
+    this._days = events.reduce(
+      (a, b) => {
+        if (a[a.length - 1].length === EVENT_COUNT) {
+          a.push([]);
+        }
+
+        a[a.length - 1].push(b);
+        return a;
+      },
+      [[]]
+    );
   }
 
   _renderPage() {
     const tripMenuFirstTitle = this._tripMenu.querySelector(`.visually-hidden`);
 
-    render(tripMain, createMenuInfo(days, getMenuData()), `afterBegin`);
+    render(tripMain, createMenuInfo(this._days, getMenuData()), `afterBegin`);
     render(tripMenuFirstTitle, createMenu(), `afterEnd`);
     render(this._tripMenu, createFilter());
     this._tripController.init();

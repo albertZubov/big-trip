@@ -54,7 +54,7 @@ export class EventController {
     if (this._mode === Mode.ADDING) {
       currentEvent = this._event.domEventEdit;
       document.addEventListener(`keydown`, onEscKeyDown);
-    }
+    } 
 
     // if (this._event.domEvent) {
     this._event.showEdit = () =>

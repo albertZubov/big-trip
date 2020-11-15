@@ -88,7 +88,7 @@ export class TripController {
       this._days[0].splice(0, 1);
       this._creatingEvent = null;
     } else if (newData === null) {
-      this._days[indexDay].splice(indexEvent, 1);
+      this._days[indexDay].splice(indexEvent, 1); 
     } else if (oldData === null) {
       this._creatingEvent = null;
       this._days[0] = [newData, ...this._days[0]];
