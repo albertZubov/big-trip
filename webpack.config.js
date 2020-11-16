@@ -10,8 +10,17 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, `public`),
+    // TODO найти информацию, где это было прописано
     publicPath: `https://localhost:8080`,
     compress: true,
     watchContentBase: true,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [`style-loader`, `css-loader`],
+      },
+    ],
   },
 };
