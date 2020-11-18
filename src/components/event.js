@@ -66,7 +66,7 @@ export class Event extends AbstractComponent {
   <ul class="event__selected-offers">
     ${this._eventOffer
       .map((objOffer) => {
-        return objOffer.checked
+        return objOffer.accepted
           ? `<li class="event__offer">
       <span class="event__offer-title">${objOffer.title}</span>
       +

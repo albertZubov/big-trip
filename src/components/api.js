@@ -37,7 +37,16 @@ export class API {
     // return this._load({});
   }
 
-  updateEvent({ id, event }) {}
+  updateEvent({ id, event }) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(event),
+      headers: new Headers({ "Content-type": "application/json" }),
+    })
+      .then(toJSON)
+      .then(ModelEvent.parseEvent);
+  }
 
   deleteEvent({ id }) {}
 

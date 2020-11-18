@@ -1,4 +1,4 @@
-import { getDate } from "./utils";
+import { getDate, setDate } from "./utils";
 
 export class ModelEvent {
   constructor(data) {
@@ -12,6 +12,7 @@ export class ModelEvent {
     this.price = data[`base_price`];
     this.isFavorite = data[`is_favorite`];
     this.eventOffer = data[`offers`];
+    this.destination = data[`destination`];
   }
 
   static parseEvent(data) {
@@ -20,6 +21,24 @@ export class ModelEvent {
 
   static parseEvents(data) {
     return data.map((event) => ModelEvent.parseEvent(event));
+  }
+
+  // prettier-ignore
+  toRAW() {
+    return {
+      'id': this.id,
+      'type': this.typeEventTransfer,
+      'date_from': setDate(this.isDateStart),
+      'date_to': setDate(this.isDateEnd),
+      'base_price': +this.price,
+      'is_favorite': this.isFavorite,
+      'offers': this.eventOffer,
+      'destination': {
+        'name': this.city,
+        'description': this.description,
+        'pictures': this.photos
+      }
+    };
   }
 }
 

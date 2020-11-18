@@ -17,6 +17,10 @@ export const getDate = (date) => {
   return dateObj;
 };
 
+export const setDate = ({ monthNumber, dayPresent, year, hours, minutes }) => {
+  return new Date(year, monthNumber, dayPresent, hours, minutes).getTime();
+};
+
 export const render = (container, element, posititon = `beforeEnd`) => {
   const div = document.createElement(`div`);
   if (typeof element === "string") {

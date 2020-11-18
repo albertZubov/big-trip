@@ -10,22 +10,27 @@ export const Mode = {
 };
 
 export class TripController {
-  constructor(days) {
+  constructor(days, onDataChange) {
     this._days = days;
+    this._onDataChange = onDataChange;
     this._tripDays = renderWithChildren(
       new TripDay().getElement(),
       this._renderDays(this._days)
     );
     this._sort = new Sort();
     this._tripEventsDom = document.querySelector(`.trip-events`);
+    this._sortDom = this._tripEventsDom.querySelector(`.trip-sort`);
+    this._tripDaysDom = this._tripEventsDom.querySelector(`.trip-days`);
     this._creatingEvent = null;
-
-    // this._onChangeView = this._onChangeView.bind(this);
-    // this._onDataChange = this._onDataChange.bind(this);
     this._activeEvent = null;
   }
 
-  init() {
+  init(check) {
+    if (check) {
+      this._tripEventsDom.removeChild(this._sortDom);
+      this._tripEventsDom.removeChild(this._tripDaysDom);
+    }
+
     render(this._tripEventsDom, this._sort.getElement());
     render(this._tripEventsDom, this._tripDays);
 
@@ -37,7 +42,7 @@ export class TripController {
   _renderDays(days) {
     return new DaysController(
       days,
-      this._onDataChange.bind(this),
+      this._onDataChange,
       this._onChangeView.bind(this),
       Mode.DEFAULT
     ).create();
@@ -52,7 +57,7 @@ export class TripController {
 
     this._creatingEvent = new DaysController(
       this._days,
-      this._onDataChange.bind(this),
+      this._onDataChange,
       this._onChangeView.bind(this),
       Mode.ADDING,
       defaultEvent
@@ -74,35 +79,33 @@ export class TripController {
     this._activeEvent = event;
   }
 
-  _onDataChange(newData, oldData) {
-    // ДОРАБОТАТЬ
-    // console.log(newData.favorites);
+  // _onDataChange(newData, oldData) {
 
-    let indexEvent = null;
-    const indexDay = this._days.findIndex((days) => {
-      indexEvent = days.findIndex((event) => event === oldData);
-      return days.find((event) => event === oldData);
-    });
+  //   let indexEvent = null;
+  //   const indexDay = this._days.findIndex((days) => {
+  //     indexEvent = days.findIndex((event) => event === oldData);
+  //     return days.find((event) => event === oldData);
+  //   });
 
-    if (oldData === null && newData === null) {
-      this._days[0].splice(0, 1);
-      this._creatingEvent = null;
-    } else if (newData === null) {
-      this._days[indexDay].splice(indexEvent, 1); 
-    } else if (oldData === null) {
-      this._creatingEvent = null;
-      this._days[0] = [newData, ...this._days[0]];
-    } else {
-      this._days[indexDay][indexEvent] = newData;
-    }
+  //   if (oldData === null && newData === null) {
+  //     this._days[0].splice(0, 1);
+  //     this._creatingEvent = null;
+  //   } else if (newData === null) {
+  //     this._days[indexDay].splice(indexEvent, 1);
+  //   } else if (oldData === null) {
+  //     this._creatingEvent = null;
+  //     this._days[0] = [newData, ...this._days[0]];
+  //   } else {
+  //     this._days[indexDay][indexEvent] = newData;
+  //   }
 
-    // Если нету ни одного события в дне, то он удаляется
-    this._days = this._days.filter((day) => day.length);
+  //   // Если нету ни одного события в дне, то он удаляется
+  //   this._days = this._days.filter((day) => day.length);
 
-    this._cleanContainer();
+  //   this._cleanContainer();
 
-    render(this._tripDays, this._renderDays(this._days));
-  }
+  //   render(this._tripDays, this._renderDays(this._days));
+  // }
 
   _update(data) {
     this._tripDays.innerHTML = ``;

@@ -4,6 +4,12 @@ import { Event } from "../components/event";
 import { renderWithChildren } from "../components/utils";
 import { Mode } from "./trip";
 
+export const actionsEvent = {
+  update: `update`,
+  create: `create`,
+  delete: `delete`,
+};
+
 export class EventController {
   constructor(event, onDataChange, onChangeView, mode) {
     this._event = event;
@@ -29,7 +35,7 @@ export class EventController {
 
   _updateOffers(el, formData) {
     return el.eventOffer.map((offer) => {
-      offer.checked = formData.get(`event-offer-${offer.value}`) === `on`;
+      offer.accepted = formData.get(`event-offer-${offer.title}`) === `on`;
       return offer;
     });
   }
@@ -54,7 +60,7 @@ export class EventController {
     if (this._mode === Mode.ADDING) {
       currentEvent = this._event.domEventEdit;
       document.addEventListener(`keydown`, onEscKeyDown);
-    } 
+    }
 
     // if (this._event.domEvent) {
     this._event.showEdit = () =>
@@ -78,21 +84,20 @@ export class EventController {
         const dateChangeStart = formData.get(`event-start-time`);
         const dateChangeEnd = formData.get(`event-end-time`);
 
-        const entry = {
-          typeEventTransfer: formData.get(`event-type`),
-          city: formData.get(`event-destination`),
-          description: this._event.description,
-          randomTimeTransit: this._event.randomTimeTransit,
-          isDateStart: this.getObjDate(dateChangeStart),
-          isDateEnd: this.getObjDate(dateChangeEnd),
-          price: formData.get(`event-price`),
-          favorites: formData.get(`event-favorite`) === `on`,
-          eventOffer: this._updateOffers(this._event, formData),
-        };
+        this._event.typeEventTransfer = formData.get(`event-type`);
+        this._event.city = formData.get(`event-destination`);
+        this._event.description = this._event.description;
+        this._event.randomTimeTransit = this._event.randomTimeTransit;
+        this._event.isDateStart = this.getObjDate(dateChangeStart);
+        this._event.isDateEnd = this.getObjDate(dateChangeEnd);
+        this._event.price = formData.get(`event-price`);
+        this._event.favorites = formData.get(`event-favorite`) === `on`;
+        this._event.eventOffer = this._updateOffers(this._event, formData);
 
         this._onDataChange(
-          entry,
-          this._mode === Mode.DEFAULT ? this._event : null
+          actionsEvent.update,
+          this._event
+          // this._mode === Mode.DEFAULT ? this._event : null
         );
 
         document.removeEventListener(`keydown`, onEscKeyDown);
