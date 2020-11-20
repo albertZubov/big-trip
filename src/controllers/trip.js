@@ -3,6 +3,7 @@ import { DaysController } from "./days";
 import { TripDay } from "../components/trip-days";
 import { Sort } from "../components/sort";
 import { getEvent } from "../components/data";
+import { ModelEvent } from "../components/model-event";
 
 export const Mode = {
   ADDING: `adding`,
@@ -48,19 +49,53 @@ export class TripController {
     ).create();
   }
 
+  /* eslint-disable */
   createEvent() {
     if (this._creatingEvent) {
       return;
     }
 
-    const defaultEvent = getEvent();
+    const defaultEvent = {
+      id: "",
+      date_to: Date.now(),
+      date_from: Date.now() + Math.pow(7, 10),
+      base_price: 400,
+      is_favorite: false,
+      type: "drive",
+      offers: [
+        { title: "Choose live music", price: 80, accepted: false },
+        { title: "Choose VIP area", price: 150, accepted: true },
+        { title: "Order a breakfast", price: 90, accepted: true },
+      ],
+      destination: {
+        description:
+          "Monaco, is a beautiful city, with an embankment of a mighty river as a centre of attraction, full of of cozy canteens where you can try the best coffee in the Middle East.",
+        name: "Monaco",
+        pictures: [
+          {
+            src: "http://picsum.photos/300/200?r=0.9957317523090607",
+            description: "Frankfurt street market",
+          },
+          {
+            src: "http://picsum.photos/300/200?r=0.30120342442988113",
+            description: "Frankfurt park",
+          },
+          {
+            src: "http://picsum.photos/300/200?r=0.22926650020860162",
+            description: "Frankfurt embankment",
+          },
+        ],
+      },
+    };
+
+    const eventToModel = new ModelEvent(defaultEvent);
 
     this._creatingEvent = new DaysController(
       this._days,
       this._onDataChange,
       this._onChangeView.bind(this),
       Mode.ADDING,
-      defaultEvent
+      eventToModel
     );
 
     this._cleanContainer();
@@ -141,10 +176,11 @@ export class TripController {
         const sortedTime = daysArr.map((day) =>
           day.sort((first, last) =>
             direction
-              ? first.randomTimeTransit - last.randomTimeTransit
-              : last.randomTimeTransit - first.randomTimeTransit
+              ? first.duration - last.duration
+              : last.duration - first.duration
           )
         );
+
         this._update(sortedTime);
         break;
 

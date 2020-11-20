@@ -6,16 +6,42 @@ const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip/`;
 
 /* eslint-disable */
-const onDataChange = (actionType, updateEvent) => {
+const onDataChange = (actionType, dataEvent, onError) => {
   switch (actionType) {
     case actionsEvent.update:
       api
         .updateEvent({
-          id: updateEvent.id,
-          event: updateEvent.toRAW(),
+          id: dataEvent.id,
+          event: dataEvent.toRAW(),
+        })
+        .then(() => api.getEvents())
+        .then((events) => {
+          // throw new Error(`fuck`);
+          mainController.init(events);
+        })
+        .catch(() => onError());
+      break;
+
+    case actionsEvent.create:
+      api
+        .createEvent({
+          event: dataEvent.toRAW(),
         })
         .then(() => api.getEvents())
         .then((events) => mainController.init(events));
+      break;
+
+    case actionsEvent.delete:
+      api
+        .deleteEvent({
+          id: dataEvent.id,
+        })
+        .then(() => api.getEvents())
+        .then((events) => {
+          // throw new Error(`fuck`);
+          mainController.init(events);
+        })
+        .catch(() => onError());
       break;
   }
 };

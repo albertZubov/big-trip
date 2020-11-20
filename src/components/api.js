@@ -34,7 +34,12 @@ export class API {
   }
 
   createEvent({ event }) {
-    // return this._load({});
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(event),
+      headers: new Headers({ "Content-type": "application/json" }),
+    });
   }
 
   updateEvent({ id, event }) {
@@ -48,7 +53,12 @@ export class API {
       .then(ModelEvent.parseEvent);
   }
 
-  deleteEvent({ id }) {}
+  deleteEvent({ id }) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.DELETE,
+    });
+  }
 
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {
     // TODO разобрать данную запись с Олегом

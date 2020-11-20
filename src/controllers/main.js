@@ -14,7 +14,7 @@ export const pageBodyContainer = pageMain.querySelector(
   `.page-body__container`
 );
 
-const EVENT_COUNT = 4;
+// const EVENT_COUNT = 5;
 // const DAY_COUNT = 3;
 
 // const renderEvents = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
@@ -33,7 +33,6 @@ export class MainController {
   }
 
   init(events) {
-    // console.log(events[0]);
     this._renderDaysIsEvent(events);
     this._statisticsController = new StatisticsController(this._days);
     this._tripController = new TripController(this._days, this._onDataChange);
@@ -95,16 +94,26 @@ export class MainController {
   }
 
   _renderDaysIsEvent(events) {
-    this._days = events.reduce(
-      (a, b) => {
-        if (a[a.length - 1].length === EVENT_COUNT) {
-          a.push([]);
-        }
+    const days = {};
+    events.forEach((event) => {
+      const { isDateStart } = event;
+      const day = isDateStart.month + isDateStart.dayPresent;
+      days[day] = days[day] ? [...days[day], event] : [event];
+    });
 
-        a[a.length - 1].push(b);
-        return a;
-      },
-      [[]]
-    );
+    this._days = Object.values(days);
+
+    // this._days = events.reduce(
+    //   (a, b) => {
+    //     if (a[a.length - 1].length === EVENT_COUNT) {
+    //       a.push([]);
+    //     }
+
+    //     a[a.length - 1].push(b);
+    //     return a;
+    //   },
+    //   [[]]
+    // );
+    // console.log(this._days);
   }
 }
