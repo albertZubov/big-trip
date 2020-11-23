@@ -2,7 +2,6 @@ import { render, renderWithChildren, copyArr } from "../components/utils";
 import { DaysController } from "./days";
 import { TripDay } from "../components/trip-days";
 import { Sort } from "../components/sort";
-import { getEvent } from "../components/data";
 import { ModelEvent } from "../components/model-event";
 
 export const Mode = {
@@ -114,34 +113,6 @@ export class TripController {
     this._activeEvent = event;
   }
 
-  // _onDataChange(newData, oldData) {
-
-  //   let indexEvent = null;
-  //   const indexDay = this._days.findIndex((days) => {
-  //     indexEvent = days.findIndex((event) => event === oldData);
-  //     return days.find((event) => event === oldData);
-  //   });
-
-  //   if (oldData === null && newData === null) {
-  //     this._days[0].splice(0, 1);
-  //     this._creatingEvent = null;
-  //   } else if (newData === null) {
-  //     this._days[indexDay].splice(indexEvent, 1);
-  //   } else if (oldData === null) {
-  //     this._creatingEvent = null;
-  //     this._days[0] = [newData, ...this._days[0]];
-  //   } else {
-  //     this._days[indexDay][indexEvent] = newData;
-  //   }
-
-  //   // Если нету ни одного события в дне, то он удаляется
-  //   this._days = this._days.filter((day) => day.length);
-
-  //   this._cleanContainer();
-
-  //   render(this._tripDays, this._renderDays(this._days));
-  // }
-
   _update(data) {
     this._tripDays.innerHTML = ``;
     render(this._tripDays, this._renderDays(data));
@@ -176,8 +147,8 @@ export class TripController {
         const sortedTime = daysArr.map((day) =>
           day.sort((first, last) =>
             direction
-              ? first.duration - last.duration
-              : last.duration - first.duration
+              ? first.difference.hours - last.difference.hours
+              : last.difference.hours - first.difference.hours
           )
         );
 

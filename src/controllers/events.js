@@ -155,10 +155,6 @@ export class EventController {
   }
 
   _setState(state, btn) {
-    // if (this._event.domEventEdit.classList.contains(`border-error`)) {
-    //   this._event.domEventEdit.classList.remove(`border-error`);
-    // }
-
     if (this._event.domEventEdit.classList.contains("shake")) {
       this._event.domEventEdit.classList.remove("shake");
     }

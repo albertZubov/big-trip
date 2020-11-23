@@ -13,13 +13,6 @@ const pageMain = pageBody.querySelector(`.page-main`);
 export const pageBodyContainer = pageMain.querySelector(
   `.page-body__container`
 );
-
-// const EVENT_COUNT = 5;
-// const DAY_COUNT = 3;
-
-// const renderEvents = () => new Array(EVENT_COUNT).fill(``).map(getEvent);
-// const days = new Array(DAY_COUNT).fill(``).map(renderEvents);
-
 export class MainController {
   constructor(onDataChange) {
     this._onDataChange = onDataChange;
@@ -99,21 +92,9 @@ export class MainController {
       const { isDateStart } = event;
       const day = isDateStart.month + isDateStart.dayPresent;
       days[day] = days[day] ? [...days[day], event] : [event];
+      console.log(event);
     });
 
     this._days = Object.values(days);
-
-    // this._days = events.reduce(
-    //   (a, b) => {
-    //     if (a[a.length - 1].length === EVENT_COUNT) {
-    //       a.push([]);
-    //     }
-
-    //     a[a.length - 1].push(b);
-    //     return a;
-    //   },
-    //   [[]]
-    // );
-    // console.log(this._days);
   }
 }

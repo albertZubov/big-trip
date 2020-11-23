@@ -1,4 +1,4 @@
-import { getDate, setDate } from "./utils";
+import { getDate, setDate, differenceDate } from "./utils";
 
 export class ModelEvent {
   constructor(data) {
@@ -13,7 +13,9 @@ export class ModelEvent {
     this.isFavorite = data[`is_favorite`];
     this.eventOffer = data[`offers`];
     this.destination = data[`destination`];
-    this.duration = data[`date_to`] - data[`date_from`];
+    this.difference = differenceDate(
+      Math.abs(data[`date_from`] - data[`date_to`])
+    );
   }
 
   static parseEvent(data) {

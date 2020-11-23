@@ -16,7 +16,6 @@ const onDataChange = (actionType, dataEvent, onError) => {
         })
         .then(() => api.getEvents())
         .then((events) => {
-          // throw new Error(`fuck`);
           mainController.init(events);
         })
         .catch(() => onError());
@@ -38,7 +37,6 @@ const onDataChange = (actionType, dataEvent, onError) => {
         })
         .then(() => api.getEvents())
         .then((events) => {
-          // throw new Error(`fuck`);
           mainController.init(events);
         })
         .catch(() => onError());
